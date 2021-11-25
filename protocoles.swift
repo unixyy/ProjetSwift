@@ -16,13 +16,19 @@ protocol BoardProtocol {
     // placement aléatoire sur le board des billes
     mutating func RandomMarbles()
 
+    // Pre : si c'est le premier tour, le joueur qui commence est aléatoire
+    func TurnOf() -> Bool
+
 
 }
 
 
 protocol UserProtocol {
+    // Déplace la bille selon la position x
+    // Pre : 1 <= x <= 7 - Nombre de billes déjà sur la ligne
+    mutating func MoveMarble(x: Int) throws
 
-    mutated func MoveMarble()
+    mutating func MoveMarble(y: Int) throws
     
 }
 
