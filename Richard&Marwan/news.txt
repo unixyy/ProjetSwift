@@ -1,0 +1,19 @@
+
+TODO:
+    - iterateur sur toutes les positions des bordures (Int,Int)
+    - display & displayScore
+
+IN PROGRESS:
+
+
+DONE:
+    - une fonction qui prend une bille et qui return la dernière bille qui sera pousée
+    - une fonction qui return Bille? en fonction de la position
+    - une fonction RandomColor
+    - pas d'id
+    - pas de RandomMarbles
+    - changer nom variable color --> estBlanc:Bool
+    - pas de MarblesInfo
+    - pas de isNearby
+    - fonction isInBorder
+    - une fonction qui prend une bille et une direction en paramètre et qui return marble|Vide s'il y a une Marble adjacente

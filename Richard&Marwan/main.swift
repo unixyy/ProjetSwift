@@ -19,12 +19,13 @@ func newGame() {
     var game = Board.init(mode : n)
     // création des 2 joueurs 
     // Le joueur dont le numéro est 1 joue en premier
-    var player1 = User.init(player : 1)
-    var player2 = User.init(player : 2)
+    var player1 = User.init()
+    var player2 = User.init()
     print("la partie commence\n")
 }
 
-func display(game : Board) {
+// Affiche l'interface du jeu à chaque tour
+func display(jeu : Board) {
     var It = game.BoardIterator()
     for elt in It{
         
@@ -38,7 +39,8 @@ func display(game : Board) {
     }
 }
 
-func displayScore(game : Board){
+// Affiche le score et éventuellement qui gagne
+func displayScore(jeu : Board){
     // Affiche le score    
 }
 
@@ -46,7 +48,7 @@ func main(){
     newGame()
     // tant que aucun joueur n'a gagné la partie
     while !game.gameOver(){
-        display(game : Board)
+        display(jeu : game)
         // user est le joueur dont c'est le tour de jeu
         var user = board.TurnOf()
         if game.CanMove(user)){
@@ -105,7 +107,7 @@ func main(){
             }
         }
     }
-    game.displayScore()
+    displayScore(jeu : game)
 }
 
 
