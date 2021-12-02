@@ -1,0 +1,11 @@
+- une fonction qui prend une bille et une direction en paramètre et qui return la marble|Vide s'il y a une Marble adjacente
+- une fonction qui prend une bille et la direction initiale et qui return la dernière bille qui sera pousée
+- pas d'id
+- changer nom variable color
+- une fonction qui return Bille? en fonction de la position
+- pas de RandomMarbles
+- une fonction RandomColor
+- iterateur sur toutes les positions des bordures (Int,Int)
+- pas de MarblesInfo
+-pas de isNearby
+- fonction isInBorder

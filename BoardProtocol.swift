@@ -62,11 +62,6 @@ protocol BoardProtocol : Sequence {
     // Post : renvoie le user qui doit jouer actuellement
     mutating func TurnOf() -> User
 
-    // playerScore : Board x User -> Int
-    // Donne le score du joueur donné en paramètre
-    // Pre : Le joueur et le board existent
-    // Post : Renvoie un entier , le score du joueur
-    func playerScore(joueur : User) -> Int
 
     // gameOver : Board -> Bool
     // Indique si la partie est finie
@@ -80,7 +75,7 @@ protocol BoardProtocol : Sequence {
     // Post : Renvoie un tableau de Marbles (Marbles)
     func MarblesInfo() -> [Marble]
 
-     // MoveMarble : Marble x Int x Int ->
+    // MoveMarble : Marble x Int x Int ->
     // Déplace la marble selon la direction donnée en param du nombre de cases donnés en paramètres si c'est possible
     // Pre : 1 <= value <= 5
     // Post : déplace la marble selon la valeur donné
@@ -120,7 +115,7 @@ protocol BoardProtocol : Sequence {
     func cellsMovable(marble : Marble) -> Int 
 
     // movable : Board x  Marble -> Bool
-    // Donne de combien de cases la Marble peux être déplacée au maximum selon la direction donnée
+    // Donne si la marble peut bouger
     // Pre : la Marble doit exister 
     // Post : renvoie true si la Marble est déplaçable
     // 
@@ -144,5 +139,15 @@ protocol BoardProtocol : Sequence {
     // Pre : les marbles existent
     // Post : True si les marbles sont adjacentes, false sinon
     func isNearby(M1 : Marble, M2 : Marble) -> Bool
+
+    // Score : User x Int -> Int
+    // Détermine le score du joueur
+    // Pre : Mode est soit : 0 pour le mode simple
+    //                soit : 1 pour le mode multiplicatif
+    // Post : renvoie un Int,  Score du Joueur selon le mode de jeu choisit
+    // Si mode == 0 => Pour toutes les Marbles B du joueur, il existe au moins une Marble M où MarblePack(M) >= MarblePack(B).
+    // Le score est ainsi la valeur de MarblePack(M)
+    // Si mode == 0 => Pour toutes les Marbles B du joueur, 
+    func Score(estBlanche : Bool) -> Int
 
 }

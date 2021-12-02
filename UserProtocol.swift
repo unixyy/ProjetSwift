@@ -9,7 +9,6 @@
 
 
 
-*/
 
 protocol UserProtocol {
     // Correspond au numéro du joueur
@@ -28,14 +27,7 @@ protocol UserProtocol {
     // fais un appel de MoveMarbleDirection
     mutating func MoveMarble(marble : Marble, value: Int)
 
-    // Score : User x Int -> Int
-    // Détermine le score du joueur
-    // Pre : Mode est soit : 0 pour le mode simple
-    //                soit : 1 pour le mode multiplicatif
-    // Post : renvoie un Int,  Score du Joueur selon le mode de jeu choisit
-    // Si mode == 0 => Pour toutes les Marbles B du joueur, il existe au moins une Marble M où MarblePack(M) >= MarblePack(B).
-    // Le score est ainsi la valeur de MarblePack(M)
-    // Si mode == 0 => Pour toutes les Marbles B du joueur, 
-    func Score(mode : Int) -> Int
+    
 
 }
+*/
