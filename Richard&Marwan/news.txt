@@ -1,12 +1,18 @@
 
 TODO:
-    - iterateur sur toutes les positions des bordures (Int,Int)
     - display & displayScore
+    - faire un itérateur sur les position
+
 
 IN PROGRESS:
 
 
 DONE:
+    - ajouter un protocol positions
+    - enumération de la direction plutôt qu'un Int
+    - SetMarble
+    - getPosition
+    - getMarble qui remplace isMarble
     - une fonction qui prend une bille et qui return la dernière bille qui sera pousée
     - une fonction qui return Bille? en fonction de la position
     - une fonction RandomColor
@@ -15,5 +21,4 @@ DONE:
     - changer nom variable color --> estBlanc:Bool
     - pas de MarblesInfo
     - pas de isNearby
-    - fonction isInBorder
     - une fonction qui prend une bille et une direction en paramètre et qui return marble|Vide s'il y a une Marble adjacente
