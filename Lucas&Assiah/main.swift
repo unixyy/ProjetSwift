@@ -78,7 +78,7 @@ func choix(j:Jeu) -> Piece {
 
 func printPlateau(jeu:Jeu, victoire:Bool) {
 
-    """
+    /*
         |------|------|------|------|
         |  01  |  02  |  03  |  04  |
         |------|------|------|------|
@@ -90,7 +90,7 @@ func printPlateau(jeu:Jeu, victoire:Bool) {
         |------|------|------|------|
      04 | BRVG | BRVG | BRVG | BRVG |
         |------|------|------|------|
-    """
+    */
     var positionIterator = jeu.makeIterator()
 
 
@@ -156,11 +156,28 @@ func getPos(x:Int, y:Int) -> Position {
     }
 }
 
+func choixDifficulte() -> Bool {
+    print("Voulez vous jouer dans le mode de jeu difficile ? (victoire possible si 4 pièces ont une caracteritique commune sur un carré de 2x2)")
+    print("(oui/non) : ", terminator:"")
+    var modeDifficile = false
+    var valide = false
+    while !valide {
+        if let typed = readLine() {
+            modeDifficile = (typed == "oui")
+            valide = true
+        }
+    }
+    print("Mode de difficulté choisi : ", terminator:"")
+    print(modeDifficile ? "Difficile" : "Normal")
+    return modeDifficile
+}
+
 
 /*
 ---------- MAIN ----------
 */
-var jeu = Jeu()
+var modeDifficile = choixDifficulte()
+var jeu = Jeu(modeDifficile:modeDifficile)
 var victoire = false
 var joueur = 1
 // premier tour, le premier joueur ne fait que choisir une pièce
