@@ -161,13 +161,15 @@ func getPos(x:Int, y:Int) -> Position {
 ---------- MAIN ----------
 */
 var jeu = Jeu()
-var joueur = 1
-// premier tour
-print("Joueur \(joueur) c'est à vous de jouer : ")
-var pieceJoueur = choix(j:jeu)
-
 var victoire = false
+var joueur = 1
+// premier tour, le premier joueur ne fait que choisir une pièce
+print("Joueur \(joueur) c'est à vous de jouer : ")
+
 while !victoire && jeu.nbPiecePlateau > 0 {
+    // choix de la pièce pour l'autre joueur
+    var pieceJoueur = choix(j:jeu)
+    // changement de joueur
     if joueur == 1 { joueur = 2}
     else { joueur = 1}
     print("Joueur \(joueur) c'est à vous de jouer : ")
@@ -179,11 +181,11 @@ while !victoire && jeu.nbPiecePlateau > 0 {
     printPlateau(j:jeu)
     print("Choisissez une case où placer votre pièce :")
     print("Choix de la ligne : ", terminator:"")
-    x = saisieInt(max:5) // max exclu
+    var x = saisieInt(max:5) // max exclu
     print("Choix de la colonne : ", terminator:"")
-    y = saisieInt(max:5) // max exclu
+    var y = saisieInt(max:5) // max exclu
     // recuperation de la position choisie par le joueur
-    posJoueur = getPos(x:x, y:y)
+    var posJoueur = getPos(x:x, y:y)
     jeu.placerPiece(pos:posJoueur, piece:pieceJoueur)
     victoire = jeu.estGagnant(pos:posJoueur)
 }
