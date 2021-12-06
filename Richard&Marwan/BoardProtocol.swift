@@ -42,18 +42,9 @@ protocol BoardProtocol : Sequence {
     // Renvoie l'itérateur sur la collection de marbles
     func BoardIterator() -> MarbleIterator
 
-    // display : Board -> String
-    // Affiche le plateau de jeu, avec l'état du jeu actuel
-    // Pre : Le board existe
-    // Post : Renvoie le string qui va être affiché en tant qu'interface
-    func display() -> String
-
-    // displayScore : Board -> String
-    // Affiche les scores des joueurs selon le mode choisit à l'initialisation
-    // Et si la partie est finie, affiche le gagnant
-    // Pre : le board existe 
-    // Post : Renvoie le string qui va être affiché en tant que Score des joueurs
-    func displayScore() -> String
+    // positionIterator : Board -> PositionIterator
+    // Renvoie l'itérateur sur la collection des positions
+    func positionIterator() -> PositionIterator
 
     // gameOver : Board -> Bool
     // Indique si la partie est finie
@@ -138,12 +129,13 @@ protocol BoardProtocol : Sequence {
     func MarblePack(marble : Marble) -> Int
 
 
-    // Score : Board x Int x Bool-> Int
+    // Score : Board x Bool-> Int
     // Détermine le score du joueur choisi
+    // isPlayer1 true c'est le joueur 1 , false c'est le joueur 2
     // Post : renvoie un Int,  Score du Joueur selon le mode de jeu choisit
     // Si mode == 0 => Pour toutes les Marbles B du joueur, il existe au moins une Marble M où MarblePack(M) >= MarblePack(B).
     // Le score est ainsi la valeur de MarblePack(M)
     // Si mode == 0 => Pour toutes les Marbles B du joueur, 
-    func Score(estBlanche : Bool, isPlayer1 : Bool) -> Int
+    func Score(isPlayer1 : Bool) -> Int
 
 }
