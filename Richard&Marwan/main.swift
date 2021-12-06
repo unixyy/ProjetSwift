@@ -10,7 +10,7 @@ func entry(numberMax:Int) -> Int{
                 number = tmp
             }
         }
-    } while number < 0 || number > limit
+    } while number < 0 || number > numberMax
     return number
 }
 
@@ -22,7 +22,7 @@ func entry(valueMax: Int) -> Int{
                 number = tmp
             }
         }
-    } while number <= 0 || number > limit
+    } while number <= 0 || number > valueMax
     return number
 }
 
@@ -31,7 +31,7 @@ func entry(valueMax: Int) -> Int{
 func newGame() {
     // 
     print("choisissez votre mode de jeu\n")
-    var n = entry(limit :1)
+    var n = entry(numberMax :1)
     // créer la partie avec le plateau rempli aléatoirement de Marbles
     var game = Board.init(mode : n)
     print("la partie commence\n")
@@ -103,8 +103,8 @@ func displayGame(jeu : Board) {
 func displayScore(jeu : Board){
     // Affiche le score
     print("Fin de la partie!\n")
-    var scoreP1 = jeu.score(true)
-    var scoreP2 = jeu.score(false)
+    var scoreP1 = jeu.score(isPlayer1 :true)
+    var scoreP2 = jeu.score(isPlayer1 :false)
     if scoreP1 > scoreP2 {
         print("Bravo au joueur 1 qui gagne à \(scoreP1) points contre \(scoreP2)!\n")
     }
