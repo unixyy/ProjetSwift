@@ -52,11 +52,11 @@ protocol BoardProtocol : Sequence {
     // Post : True si la partie est finie, false sinon
     func gameOver() -> Bool
 
-    // MoveMarble : Marble x Int x Int ->
+    // MoveMarble : Board x Position x Int x DirectionEnum ->
     // Déplace la marble selon la direction donnée en param du nombre de cases donnés en paramètres si c'est possible
     // Pre : 1 <= value <= 5
     // Post : déplace la marble selon la valeur donné
-    mutating func MoveMarble(marble : Marble, value: Int, direction : DirectionEnum)
+    mutating func MoveMarble(position : Position, value: Int, direction : DirectionEnum)
 
 
     // MarblesInLine : Int -> Int
@@ -71,52 +71,47 @@ protocol BoardProtocol : Sequence {
     // Post : Renvoie un Int qui correspond au nombre de Marbles sur la colonne
     func MarblesInLine(column : Int) -> Int
 
-    // CannotMove : Board x Marble -> Bool
+    // CannotMove : Board x Bool -> Bool
     // Dit si on peut déplacer au moins une marble de la couleur choisie
     // Pre : estBlanc est un Boolean
     // Post : Renvoie true s'il existe au moins une marble déplacable de la couleur
     // et false sinon
     func CanMove(estBlanc: Bool) -> Bool
 
-    // cellsMovable : Board x Marble x Int -> Int
+    // cellsMovable : Board x Position x Int -> Int
     // Donne le nombre de cases au maximum où on peux bouger la Marble donnée en paramètre
     // Pre : la Marble doit exister
     // Post : renvoie un int , le nombre de cases max où on peux bouger dans la direction choisie
     // renvoie 0 si la Marble ne peux pas bouger
     // cellsMovable(M) != 0 <=> isMovable 
-    func cellsMovable(marble : Marble, direction : DirectionEnum) -> Int 
+    func cellsMovable(position : Position, direction : DirectionEnum) -> Int 
 
-    // movable : Board x  Marble -> Bool
+    // movable : Board x  Position -> Bool
     // Donne si la marble peut bouger
     // Pre : la Marble doit exister 
     // Post : renvoie true si la Marble est déplaçable
-    func isMovable(marble : Marble) -> Bool
+    func isMovable(position : Position) -> Bool
 
 
-    // NextTo : Board x Marble x Int -> Marble?
+    // NextTo : Board x Position x DirectionEnum -> Position?
     // renvoie la présence d'une marble ou non juste à côté, dans la direction choisie
     // renvoie une marble s'il y en a une à côté dans la diretion, sinon Vide
-    func NextTo(marble : Marble, direction : DirectionEnum) -> Marble?
+    func NextTo(position : Position, direction : DirectionEnum) -> Position?
 
-    // willBeLastMoved : Board x Marble -> Marble
+    // willBeLastMoved : Board x Position -> Position
     // renvoie la dernière marble qui sera poussée par la marble choisie
-    func willBeLastMoved(marble : Marble) -> Marble
+    func willBeLastMoved(position : Position) -> Position
 
-    // getPosition : Board x Marble -> Position
+    // getPosition : Board x Int x Int -> Position?
     // renvoie la Position affiliée à la Marble choisie
     // Post : renvoi une position
-    func getPosition(marble: Marble) -> Position
+    func getPosition(x:Int,y:Int) -> Position?
     
-    // isMarble : Board x Position -> Marble?
-    // Pre : La position appartient au plateau de jeu
-    // renvoie la marble si une marble est a la position demandée, sinon renvoie Vide
-    func getMarble(position : Position) -> Marble?
-    
-    // isInBorder : Board x Marble -> Bool
+    // isInBorder : Board x Position -> Bool
     // renvoie un boolean indiquant si la marble choisie est sur le bord ou pas
     // pre : la marble existe
     // Post : renvoie True si la marble est sur le bord, sinon false
-    func isInBorder(marble : Marble) -> Bool
+    func isInBorder(position : Position) -> Bool
 
     // setMarble : Board x Marble x Position ->
     // place une marble sur la position indiquée, si celle-ci est vide
@@ -126,7 +121,7 @@ protocol BoardProtocol : Sequence {
     // donne le nombre de Marbles dans le pack de cellule donnée en paramètre
     // Post : renvoi la valeur du pack dans lequel est la marble
     // Si M1 et M2 sont dans le même pack ( marbles adjacentes ) => MarblePack(M1) = MarblePack(M2)
-    func MarblePack(marble : Marble) -> Int
+    func MarblePack(position : Position) -> Int
 
 
     // Score : Board x Bool-> Int

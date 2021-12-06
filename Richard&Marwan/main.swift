@@ -141,19 +141,21 @@ func main(){
         var x = entry(numberMax:8) // la limite est incluse
         print("\nChoix de la colonne : ")
         var y = entry(numberMax:8) // la limite est incluse
-        let marble: Marble? = game.getMarble(x:x,y:y)
-        while let marble == nil || marble.estBlanc =! playerBool || !game.isInBorder(marble :marble){
+        var position: Position? = game.getPosition(x:x,y:y)
+        while position == nil || !game.isInBorder(position: position) || position.contains == nil || position.contains.estBlanc != playerBool {
             print("\nLa Marble n'est pas bonne, veuillez en choisir une autre\n")
             print("Choix de la ligne : ")
-            var x = entry(limit:8) // la limite est incluse
+            var x = entry(numberMax:8) // la limite est incluse
             print("\nChoix de la colonne : ")
-            var y = entry(limit:8) // la limite est incluse
-            let marble: Marble? = game.getMarble(x:x,y:y)
+            var y = entry(numberMax:8) // la limite est incluse
+            position: Position? = game.getPosition(x:x,y:y)
+        } // arret : la position n'est pas vide, est sur un bord, contiens une Marble, cette Marble appartient au joueur
+        if let marble = position.contains {
+            print("Choisissez de combien de cases vous voulez déplacer cette Marble :")
+            let maxValue = game.cellsMovable(position:position, direction:marble.initalDirection)
+            var value = entry(valueMax:maxValue)
+            game.MoveMarble(position : Position, value:value, direction: marble.initalDirection)
         }
-        print("Choisissez de combien de cases vous voulez déplacer cette Marble :")
-        let maxValue = game.cellsMovable(marble:marble, direction:marble.initalDirection)
-        var value = entry(limit = maxValue)
-        game.MoveMarble(marble:marble, value:value,direction: marble.initalDirection)
     }
 
     displayScore(jeu : game)
