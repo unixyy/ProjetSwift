@@ -1,13 +1,12 @@
 
 TODO:
-    - display & displayScore
-    - faire un itérateur sur les position
-
 
 IN PROGRESS:
 
 
 DONE:
+    - display & displayScore
+    - faire un itérateur sur les position
     - ajouter un protocol positions
     - enumération de la direction plutôt qu'un Int
     - SetMarble

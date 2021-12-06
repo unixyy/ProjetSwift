@@ -63,9 +63,13 @@ func displayGame(jeu : Board) {
     "   
        |   X0  |   X1  |   X2  |   X3  |   X4  |   X5  |   X6  |   X7  |\n
        |-------|-------|-------|-------|-------|-------|-------|-------|\n
-    Y0 |       |\n
-       |-------|-------|-------|-------|-------|-------|-------|-------|\n
+    Y0 |       |
     
+    "
+    
+    var displayStringEnd : String = 
+    "\n   |-------|-------|-------|-------|-------|-------|-------|-------|\n
+
     "
     var posIt = jeu.positionIterator()
     // Y0
@@ -96,7 +100,7 @@ func displayGame(jeu : Board) {
             displayString = displayString + "       |"
         }
     }
-    print(displayString)
+    print(displayString+displayStringEnd)
 }
 
 // Affiche le score et éventuellement qui gagne
