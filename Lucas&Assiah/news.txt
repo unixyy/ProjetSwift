@@ -1,3 +1,4 @@
 TODO : 
 DONE :
     -Probleme affichage réserve
+    - ajout du choix de la difficulté avec les carrés

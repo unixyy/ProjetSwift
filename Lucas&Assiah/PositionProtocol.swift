@@ -42,6 +42,8 @@
 /// getColonne : Position -> Int
 /// renvoie le numero de la colonne de la position
 
+/// makeIterator :Position -> PosCarreIterator
+
 
 /// estOccupée(init()) == false
 /// estOccupée(placerPiece(init(), p)) == true
@@ -83,4 +85,19 @@ protocol PositionProtocol {
 
     // renvoie le numero de la colonne de la position
     var getColonne : Int { get }
+
+
+    // iterator sur toutes les coordonées des carrés qui contiennent la Position
+    // un carré de position est un groupe de 4 positions formant un carré de 2x2 
+    // avec comme identifiant la coordonéee de la position en haut à gauche
+    // il y a 9 carrés : (1, 1), (3, 1), (1, 3), (3, 3)
+    //                 : (2, 1), (1, 2), (3, 2), (2, 3)
+    //                 : (2, 2)
+    // exemple : si la position est sur la ligne 2 et la colonne 2 : itère sur les valeurs suivante : (1, 1) -> (2, 1) -> (1, 2) -> (2, 2) -> nil
+    func makeIterator() -> PosCarreIterator
+}
+
+protocol PosCarreIteratorProtocol : IteratorProtocol {
+    init()
+    next() -> (Int, Int)?
 }
