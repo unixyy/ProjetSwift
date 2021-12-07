@@ -60,7 +60,7 @@ protocol PositionProtocol {
 
     /// estOccupée : Position -> Bool
     /// vérifie si la position est occupée
-    var estOccupée : Bool { get }
+    var estOccupee : Bool { get }
 
     /// placerPiece : Position x Piece -> Position
     /// place une piece sur la position
