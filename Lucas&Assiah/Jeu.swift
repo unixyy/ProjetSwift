@@ -1,30 +1,27 @@
 struct Jeu : JeuProtocol {
-   private var modeDifficile
-   private var tab = [[Position]] = [:]
+    private var modeDifficile
+    private var tab = [[Position]] = [:]
+    private var nbPieceReserve : Int 
+    private var nbPiecePlateau : Int 
+    private var reserve : [Pieces] = []
 
    /// init : modeDifficile : Bool -> Jeu
     /// créer un nouveau jeu
     /// modeDifficile : Bool si le mode de jeu est difficile, 
     /// alors il y a la possibilié de gagner en posant 4 pièces avec une caracteristique identique en formant un carré de 2x2
     init(modeDifficile: Bool) {
-      self.modeDifficile = modeDifficile
-      self.nbPieceReserve = 16
-      self.nbPiecePlateau = 0
+    self.modeDifficile = modeDifficile
+    self.nbPieceReserve = 16
+    self.nbPiecePlateau = 0
+    self.reserve[1] = Piece.init(estBlanche:false, estRonde:false, estRemplie:false, estGrande:false)
     }
 
-    /// nbPieceReserve : Jeu -> Int
-    /// indique le nombre de pieces restantes dans la reserve
-    var nbPieceReserve : Int 
-
-    /// nbPiecePlateau : Jeu -> Int
-    /// indique le nombre de pieces restantes sur le plateau
-    var nbPiecePlateau : Int 
 
     /// restPieceReserve : Jeu -> Bool
     /// indique s'il reste des pieces dans la reserve
     var restePieceReserve : Bool { 
-       return nbPieceReserve != 0
-     }
+        return nbPieceReserve != 0
+    }
 
     /// choisirPiece : Jeu x Piece -> Jeu
     /// enlève la pièce donnée en paramètre de la reserve
@@ -32,6 +29,11 @@ struct Jeu : JeuProtocol {
     ///     erreur -> piece pas dans la reserve
     /// post : diminue le nombre de piece de la reserve de 1
     mutating func choisirPiece(piece : Piece) throws {
+        if !self.reserve.contains(piece){
+            throw error
+        }else{
+            // TODO Cette partie
+        }
 
     }
 
@@ -43,18 +45,25 @@ struct Jeu : JeuProtocol {
     // 
     // pos en (x, y) && pos.estOccupée == true => getPosition(x, y) == vide
     func getPosition(x:Int, y:Int) -> Position? {
-       
+        if (x<1 || x>4 || y<1 ||y>4){
+            return nil
+        }else{
+            return self.tab[y][x]
+        }
+
     }
 
     // placerPiece : Jeu x Position x Piece -> Jeu
     // place une piece à une position donnée sur le plateau
     // placer une piece augmente le nombre de piece sur le plateau de 1
+    // TODO : A faire
     mutating func placerPiece(pos:Position, piece:Piece)
 
     /// estGagnant : Jeu x Position -> Bool
     /// renvoie s'il y a une victoire à partir de la dernière position jouée, mise en paramètre
     /// victoire = au moins 1 caractèristique identique sur 4 pièces alignées sur une même ligne, colonne ou diagonale
     /// post : modifie le paramètre estGagnant des 4 positions gagnantes
+    // TODO
     func estGagnant(pos:Position) -> Bool
 
     // renvoie le nombre de piece sur une ligne
@@ -121,7 +130,7 @@ struct Jeu : JeuProtocol {
     func makeItCarre(posCarre:(Int, Int)) -> CarreIterator
    
     /// compare : Jeu x Piece x Piece x Piece x Piece -> Bool
-    /// compare 4 pieces et renvoie si elles ont au moins une caractéristique en commun
+    /// compare 4 pieces et renvoie true si elles ont au moins une caractéristique en commun
     func compare(p1: Piece, p2 : Piece, p3 : Piece, p4 : Piece) -> Bool
     
 }

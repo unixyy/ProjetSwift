@@ -9,17 +9,18 @@ struct Position: PositionProtocol{
     private var estGagnant : Bool
 
     
+    // TODO : probleme avec la variable "contenu", le compilateur trouve l'affectation ambigûe
     init(){
         self.estOccupee = false
         self.contenu = nil
         self.estGagnant = false
     } 
-
+    // TODO : Même chose qu'au dessus
     init(pos:(Int,Int)){
         self.estOccupee = false
         self.contenu = nil
-        self.getLigne = pos[0]
-        self.getColonne = pos[1]
+        self.getLigne = pos.0
+        self.getColonne = pos.1
         self.estGagnant = false
         
     }
@@ -27,7 +28,10 @@ struct Position: PositionProtocol{
 
     /// placerPiece : Position x Piece -> Position
     /// place une piece sur la position
-    mutating func placerPiece(piece:Piece)
+    mutating func placerPiece(piece:Piece) -> Position {
+        self.contenu = Piece
+        return self
+    }
 
 
     func getPiece() -> Piece?{
@@ -45,7 +49,7 @@ struct Position: PositionProtocol{
             i += 1
         }
         return false
-     }
+    }
 
     // renvoie si la position est sur la diagonale croissante (de (1,4) à (4, 1))
     var estSurDiagCroissante : Bool { 
@@ -57,7 +61,7 @@ struct Position: PositionProtocol{
             i += 1
         }
         return false
-     }
+    }
 
 
 
@@ -68,10 +72,28 @@ struct Position: PositionProtocol{
     //                 : (2, 1), (1, 2), (3, 2), (2, 3)
     //                 : (2, 2)
     // exemple : si la position est sur la ligne 2 et la colonne 2 : itère sur les valeurs suivante : (1, 1) -> (2, 1) -> (1, 2) -> (2, 2) -> nil
-    func makeIterator() -> PosCarreIterator
+    func makeIterator() -> PosCarreIterator{
+        let PosCarre = PosCarreIterator.init()
+        return PosCarre
+    }
 }
 
-protocol PosCarreIteratorProtocol : IteratorProtocol {
-    init()
-    next() -> (Int, Int)?
+struct PosCarreIterator : PosCarreIteratorProtocol {
+
+    private let values : [(Int,Int)]
+    private var index : Int
+
+    init(){
+        self.index = 0
+
+
+    }
+
+    mutating func next() -> (Int, Int)?{
+        if index < values.count-1{
+            index += 1
+            return values[self.index]
+        }
+        return nil
+    }
 }

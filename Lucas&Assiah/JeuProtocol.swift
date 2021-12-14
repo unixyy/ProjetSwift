@@ -51,6 +51,15 @@
 
 
 protocol JeuProtocol : Sequence {
+
+    associatedtype PiecesIterator : IteratorProtocol
+    associatedtype PositionIterator : IteratorProtocol
+    associatedtype LigneIterator : IteratorProtocol
+    associatedtype ColonneIterator : IteratorProtocol
+    associatedtype DiagonaleIterator : IteratorProtocol
+    associatedtype CarreIterator : IteratorProtocol
+
+
     /// init : modeDifficile : Bool -> Jeu
     /// créer un nouveau jeu
     /// modeDifficile : Bool si le mode de jeu est difficile, 
@@ -166,30 +175,30 @@ protocol JeuProtocol : Sequence {
 
 protocol PiecesIteratorProtocol : IteratorProtocol {
     init()
-    next() -> Piece?
+    mutating func next() -> Piece?
 }
 
 protocol PositionIteratorProtocol : IteratorProtocol {
     init()
-    next() -> Position?
+    mutating func next() -> Position?
 }
 
 protocol LigneIteratorProtocol : IteratorProtocol {
     init()
-    next() -> Piece?
+    mutating func next() -> Piece?
 }
 
 protocol ColonneIteratorProtocol : IteratorProtocol {
     init()
-    next() -> Piece?
+    mutating func next() -> Piece?
 }
 
 protocol DiagonaleIteratorProtocol : IteratorProtocol {
     init()
-    next() -> Piece?
+    mutating func next() -> Piece?
 }
 
 protocol CarreIteratorProtocol : IteratorProtocol {
     init()
-    next() -> Piece?
+    mutating func next() -> Piece?
 }
