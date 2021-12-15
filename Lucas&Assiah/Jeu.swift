@@ -1,9 +1,9 @@
-struct Jeu : JeuProtocol {
-    private var modeDifficile
-    private var tab = [[Position]] = [:]
-    private var nbPieceReserve : Int 
-    private var nbPiecePlateau : Int 
-    private var reserve : [Pieces] = []
+struct Jeu : JeuProtocol{
+    private var modeDifficile : Bool
+    private var tab : [[Position]]
+    private(set) var nbPieceReserve : Int 
+    private(set) var nbPiecePlateau : Int 
+    private var reserve : [Piece]
 
    /// init : modeDifficile : Bool -> Jeu
     /// créer un nouveau jeu
@@ -26,6 +26,7 @@ struct Jeu : JeuProtocol {
     enum InvalidPieceError: Error {
         case error
     }
+
     /// choisirPiece : Jeu x Piece -> Jeu
     /// enlève la pièce donnée en paramètre de la reserve
     /// pre : piece est dans la reserve
@@ -37,7 +38,7 @@ struct Jeu : JeuProtocol {
         }else{
             let index = self.reserve.firstIndex(of : piece)
             reserve.remove(at: index)
-            self. nbPieceReserve -= 1
+            self.nbPieceReserve -= 1
         }
 
     }
@@ -50,10 +51,10 @@ struct Jeu : JeuProtocol {
     // 
     // pos en (x, y) && pos.estOccupée == true => getPosition(x, y) == vide
     func getPosition(x:Int, y:Int) -> Position? {
-        if (x<1 || x>4 || y<1 ||y>4){
+        if (x<1 || x>4 || y<1 || y>4){
             return nil
         }else{
-            return self.tab[x][y]
+            return self.tab[x-1][y-1]
         }
 
     }
@@ -62,7 +63,9 @@ struct Jeu : JeuProtocol {
     // place une piece à une position donnée sur le plateau
     // placer une piece augmente le nombre de piece sur le plateau de 1
     // TODO : A faire
-    mutating func placerPiece(pos:Position, piece:Piece)
+    mutating func placerPiece(pos:Position, piece:Piece){
+
+    }
 
     /// estGagnant : Jeu x Position -> Bool
     /// renvoie s'il y a une victoire à partir de la dernière position jouée, mise en paramètre
@@ -70,16 +73,16 @@ struct Jeu : JeuProtocol {
     /// post : modifie le paramètre estGagnant des 4 positions gagnantes
     // TODO
     func estGagnant(pos:Position) -> Bool{
-
+        return false
     }
 
     // renvoie le nombre de piece sur une ligne
     func nbPieceLigne(ligne: Int) -> Int{
         var nbPieceLigne = 0
         for i in 0...3{
-            if tab[ligne][i] != nil{
+            if  getPosition(x:ligne-1,y:i)?.getPiece() != nil{
                 nbPieceLigne += 1
-            }
+            }else{}
         }
         return nbPieceLigne
     }
@@ -88,9 +91,9 @@ struct Jeu : JeuProtocol {
     func nbPieceColonne(colonne: Int) -> Int{
         var nbPieceColonne = 0
         for i in 0...3{
-            if tab[i][colonne] != nil{
+            if getPosition(x:i,y:colonne)?.getPiece() != nil{
                 nbPieceColonne += 1
-            }
+            }else{}
         }
         return nbPieceColonne
     }
@@ -99,20 +102,21 @@ struct Jeu : JeuProtocol {
     // diagonale decroissante (true) : de (1, 1) à (4, 4) \ 
     // diagonale croissante (false) : de (1, 4) à (4, 1) /
     func nbPieceDiagonale(decroissante: Bool) -> Int{
-        nbPieceDiagonale = 0
+        var nbPieceDiagonale = 0
         if decroissante == true{
             for i in 0...3{
-                if tab[i][3-i] =! nil{
+                if getPosition(x:i,y:3-i)?.getPiece() != nil{
                     nbPieceDiagonale += 1
-                }
+                }else{}
             }
         }else{
             for i in 0...3{
-                if tab[3-i][i] =! nil{
+                if getPosition(x:3-i,y:i)?.getPiece() != nil{
                     nbPieceDiagonale += 1
-                }
+                }else{}
         }
         return nbPieceDiagonale
+        }
     }
    
     // renvoie le nombre de piece dans un carre
@@ -141,7 +145,7 @@ struct Jeu : JeuProtocol {
         while x <= posCarre.0+1{
             y = posCarre.1
             while y<=posCarre.1+1{
-                if tab[x][y] != nil{
+                if getPosition(x:x,y:y)?.getPiece() != nil{
                     nbPieceCarre += 1
                 }
                 y += 1
@@ -168,34 +172,46 @@ struct Jeu : JeuProtocol {
 
     // makeIterator : Jeu -> Piece
     // iterator sur toutes les pieces de la reserve
-    func makeItReserve() -> PiecesIterator
+    func makeItReserve() -> PiecesIterator{
+
+    }
 
     // makeIterator : Jeu -> Position
     // iterator sur toutes les positions du jeu
-    func makeIterator() -> PositionIterator
+    func makeIterator() -> PositionIterator{
+
+    }
 
     // iterator sur toutes les pièces d'une ligne
     // pre : 1 <= ligne <= 4
     //     : si une position de la ligne ne contient pas de piece, on passe à la position suivante avant de return
-    func makeItLigne(ligne : Int) -> LigneIterator
+    func makeItLigne(ligne : Int) -> LigneIterator{
+
+    }
 
     // iterator sur toutes les pièces d'une colonne
     // pre : 1 <= colonne <= 4 
     //     : si une position de la colonne ne contient pas de piece, on passe à la position suivante avant de return
-    func makeItColonne(colonne: Int) -> ColonneIterator
+    func makeItColonne(colonne: Int) -> ColonneIterator{
+
+    }
 
     // iterator sur toutes les pièces d'une diagonale
     // diagonale decroissante (true) : de (1, 1) à (4, 4) \ 
     // diagonale croissante (false) : de (1, 4) à (4, 1) /
     //     : si une position de la diagonale ne contient pas de piece, on passe à la position suivante avant de return
-    func makeItDiagonale(decroissante:Bool) -> DiagonaleIterator
+    func makeItDiagonale(decroissante:Bool) -> DiagonaleIterator{
+
+    }
 
    // iterator sur toutes les pièces d'un carré
     //     : si une position du carré ne contient pas de piece, on passe à la position suivante avant de return
     // voir nbPieceCarre pour les positions d'un carré
     // exemple, si on donne la position (1,1), l'iterator va renvoyer les Pieces situées dans les Positions aux coordonnées (1,1) -> (2, 1) -> (1, 2) -> (2,2) puis nil à la fin de l'iteration
     // si chacune des positions contiens bien une piece. 
-    func makeItCarre(posCarre:(Int, Int)) -> CarreIterator
+    func makeItCarre(posCarre:(Int, Int)) -> CarreIterator{
+
+    }
     
     
 }
@@ -209,7 +225,7 @@ struct PiecesIterator : IteratorProtocol {
     mutating func next() -> Piece?
 }
 
-struct PositionIteratorProtocol : IteratorProtocol {
+struct PositionIterator : IteratorProtocol {
 
 
     init(){
@@ -218,7 +234,7 @@ struct PositionIteratorProtocol : IteratorProtocol {
     mutating func next() -> Position?
 }
 
-struct LigneIteratorProtocol : IteratorProtocol {
+struct LigneIterator : IteratorProtocol {
 
 
     init(){
@@ -227,7 +243,7 @@ struct LigneIteratorProtocol : IteratorProtocol {
     mutating func next() -> Piece?
 }
 
-struct Colonnestruct : IteratorProtocol {
+struct ColonneIterator : IteratorProtocol {
 
 
     init(){
@@ -236,7 +252,7 @@ struct Colonnestruct : IteratorProtocol {
     mutating func next() -> Piece?
 }
 
-struct DiagonaleIteratorProtocol : IteratorProtocol {
+struct DiagonaleIterator : IteratorProtocol {
 
 
     init(){
@@ -245,7 +261,7 @@ struct DiagonaleIteratorProtocol : IteratorProtocol {
     mutating func next() -> Piece?
 }
 
-struct CarreIteratorProtocol : IteratorProtocol {
+struct CarreIterator : IteratorProtocol {
 
 
     init(){

@@ -1,2 +1,0 @@
-- rajout des associatedtype
-- rajout de mutating func next() ( ce n'était que des next())

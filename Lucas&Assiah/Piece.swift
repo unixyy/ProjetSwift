@@ -1,4 +1,4 @@
-struct Piece : PieceProtocol{
+struct Piece : PieceProtocol, Equatable{
 
     private var estBlanche : Bool, estRonde : Bool, estRemplie : Bool, estGrande : Bool
     /// init : Bool x Bool x Bool x Bool -> Piece 
@@ -11,4 +11,7 @@ struct Piece : PieceProtocol{
         self.estGrande = estGrande
     }
 
+    private static func ==(lhs: Piece,rhs: Piece) -> Bool {
+        return lhs.estBlanche == rhs.estBlanche && lhs.estRonde == rhs.estRonde && lsh.estGrande == rhs.estGrande && lhs.estRemplie == rhs.estRemplie
+    }
 }

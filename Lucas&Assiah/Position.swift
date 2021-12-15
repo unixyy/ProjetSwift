@@ -3,7 +3,7 @@ struct Position: PositionProtocol{
     /// estOccupée : Position -> Bool
     /// vérifie si la position est occupée
     private var estOccupee : Bool
-    private var contenu : Piece?
+    private(set) var contenu : Piece?
     private var getLigne : Int
     private var getColonne : Int
     private var estGagnant : Bool
