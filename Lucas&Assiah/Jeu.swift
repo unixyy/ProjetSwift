@@ -36,11 +36,10 @@ struct Jeu : JeuProtocol{
         if !self.reserve.contains(piece) {
             throw InvalidPieceError.error
         }else{
-            let index = self.reserve.firstIndex(of : piece)
+            let index = self.reserve.firstIndex(of : piece)!
             reserve.remove(at: index)
             self.nbPieceReserve -= 1
         }
-
     }
 
     /// getPosition : Jeu x Int x Int -> Position?
