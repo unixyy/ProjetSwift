@@ -23,16 +23,21 @@ struct Jeu : JeuProtocol {
         return nbPieceReserve != 0
     }
 
+    enum InvalidPieceError: Error {
+        case error
+    }
     /// choisirPiece : Jeu x Piece -> Jeu
     /// enlève la pièce donnée en paramètre de la reserve
     /// pre : piece est dans la reserve
     ///     erreur -> piece pas dans la reserve
     /// post : diminue le nombre de piece de la reserve de 1
     mutating func choisirPiece(piece : Piece) throws {
-        if !self.reserve.contains(piece){
-            throw error
+        if !self.reserve.contains(piece) {
+            throw InvalidPieceError.error
         }else{
-            // TODO Cette partie
+            let index = self.reserve.firstIndex(of : piece)
+            reserve.remove(at: index)
+            self. nbPieceReserve -= 1
         }
 
     }
@@ -48,7 +53,7 @@ struct Jeu : JeuProtocol {
         if (x<1 || x>4 || y<1 ||y>4){
             return nil
         }else{
-            return self.tab[y][x]
+            return self.tab[x][y]
         }
 
     }
@@ -64,18 +69,51 @@ struct Jeu : JeuProtocol {
     /// victoire = au moins 1 caractèristique identique sur 4 pièces alignées sur une même ligne, colonne ou diagonale
     /// post : modifie le paramètre estGagnant des 4 positions gagnantes
     // TODO
-    func estGagnant(pos:Position) -> Bool
+    func estGagnant(pos:Position) -> Bool{
+
+    }
 
     // renvoie le nombre de piece sur une ligne
-    func nbPieceLigne(ligne: Int) -> Int
+    func nbPieceLigne(ligne: Int) -> Int{
+        var nbPieceLigne = 0
+        for i in 0...3{
+            if tab[ligne][i] != nil{
+                nbPieceLigne += 1
+            }
+        }
+        return nbPieceLigne
+    }
 
     // renvoie le nombre de piece sur une colonne
-    func nbPieceColonne(colonne: Int) -> Int
+    func nbPieceColonne(colonne: Int) -> Int{
+        var nbPieceColonne = 0
+        for i in 0...3{
+            if tab[i][colonne] != nil{
+                nbPieceColonne += 1
+            }
+        }
+        return nbPieceColonne
+    }
 
     // renvoie le nombre de piece sur une diagonale
     // diagonale decroissante (true) : de (1, 1) à (4, 4) \ 
     // diagonale croissante (false) : de (1, 4) à (4, 1) /
-    func nbPieceDiagonale(decroissante: Bool) -> Int
+    func nbPieceDiagonale(decroissante: Bool) -> Int{
+        nbPieceDiagonale = 0
+        if decroissante == true{
+            for i in 0...3{
+                if tab[i][3-i] =! nil{
+                    nbPieceDiagonale += 1
+                }
+            }
+        }else{
+            for i in 0...3{
+                if tab[3-i][i] =! nil{
+                    nbPieceDiagonale += 1
+                }
+        }
+        return nbPieceDiagonale
+    }
    
     // renvoie le nombre de piece dans un carre
     // un carré de position est un groupe de 4 positions formant un carré de 2x2 
@@ -96,7 +134,37 @@ struct Jeu : JeuProtocol {
      04 | BRVG | BRVG | BRVG | BRVG |
         |------|------|------|------|
     */
-    func nbPieceCarre(posCarre: (Int, Int)) -> Int
+    func nbPieceCarre(posCarre: (Int, Int)) -> Int{
+        var nbPieceCarre = 0
+        var x = posCarre.0
+        var y = posCarre.1
+        while x <= posCarre.0+1{
+            y = posCarre.1
+            while y<=posCarre.1+1{
+                if tab[x][y] != nil{
+                    nbPieceCarre += 1
+                }
+                y += 1
+            }
+            x += 1
+        }
+        return nbPieceCarre
+    }
+
+
+    /// compare : Jeu x Piece x Piece x Piece x Piece -> Bool
+    /// compare 4 pieces et renvoie true si elles ont au moins une caractéristique en commun
+    func compare(p1: Piece, p2 : Piece, p3 : Piece, p4 : Piece) -> Bool{
+        if (p1.estBlanche == p2.estBlanche) && (p2.estBlanche == p3.estBlanche) && (p3.estBlanche == p4.estBlanche){
+            return true
+        }else if (p1.estRonde == p2.estRonde) && (p2.estRonde == p3.estRonde) && (p3.estRonde == p4.estRonde){
+            return true
+        }else if (p1.estRemplie == p2.estRemplie) && (p2.estRemplie == p3.estRemplie) && (p3.estRemplie == p4.estRemplie){
+            return true
+        }else if (p1.estGrande == p2.estGrande) && (p2.estGrande == p3.estGrande) && (p3.estGrande == p4.estGrande){
+            return true
+        } else { return false }
+    }
 
     // makeIterator : Jeu -> Piece
     // iterator sur toutes les pieces de la reserve
@@ -128,39 +196,60 @@ struct Jeu : JeuProtocol {
     // exemple, si on donne la position (1,1), l'iterator va renvoyer les Pieces situées dans les Positions aux coordonnées (1,1) -> (2, 1) -> (1, 2) -> (2,2) puis nil à la fin de l'iteration
     // si chacune des positions contiens bien une piece. 
     func makeItCarre(posCarre:(Int, Int)) -> CarreIterator
-   
-    /// compare : Jeu x Piece x Piece x Piece x Piece -> Bool
-    /// compare 4 pieces et renvoie true si elles ont au moins une caractéristique en commun
-    func compare(p1: Piece, p2 : Piece, p3 : Piece, p4 : Piece) -> Bool
+    
     
 }
 
-protocol PiecesIteratorProtocol : IteratorProtocol {
-    init()
-    next() -> Piece?
+struct PiecesIterator : IteratorProtocol {
+
+
+    init(){
+
+    }
+    mutating func next() -> Piece?
 }
 
-protocol PositionIteratorProtocol : IteratorProtocol {
-    init()
-    next() -> Position?
+struct PositionIteratorProtocol : IteratorProtocol {
+
+
+    init(){
+
+    }
+    mutating func next() -> Position?
 }
 
-protocol LigneIteratorProtocol : IteratorProtocol {
-    init()
-    next() -> Piece?
+struct LigneIteratorProtocol : IteratorProtocol {
+
+
+    init(){
+
+    }
+    mutating func next() -> Piece?
 }
 
-protocol ColonneIteratorProtocol : IteratorProtocol {
-    init()
-    next() -> Piece?
+struct Colonnestruct : IteratorProtocol {
+
+
+    init(){
+
+    }
+    mutating func next() -> Piece?
 }
 
-protocol DiagonaleIteratorProtocol : IteratorProtocol {
-    init()
-    next() -> Piece?
+struct DiagonaleIteratorProtocol : IteratorProtocol {
+
+
+    init(){
+
+    }
+    mutating func next() -> Piece?
 }
 
-protocol CarreIteratorProtocol : IteratorProtocol {
-    init()
-    next() -> Piece?
+struct CarreIteratorProtocol : IteratorProtocol {
+
+
+    init(){
+
+    }
+    mutating func next() -> Piece?
 }
