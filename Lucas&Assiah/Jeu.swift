@@ -73,18 +73,17 @@ struct Jeu : JeuProtocol{
     // placerPiece : Jeu x Position x Piece -> Jeu
     // place une piece à une position donnée sur le plateau
     // placer une piece augmente le nombre de piece sur le plateau de 1
-    // TODO : A faire
     mutating func placerPiece(pos:Position, piece:Piece){
-
+        pos.placerPiece(piece:piece)
+        nbPiecePlateau += 1
     }
 
     /// estGagnant : Jeu x Position -> Bool
     /// renvoie s'il y a une victoire à partir de la dernière position jouée, mise en paramètre
     /// victoire = au moins 1 caractèristique identique sur 4 pièces alignées sur une même ligne, colonne ou diagonale
     /// post : modifie le paramètre estGagnant des 4 positions gagnantes
-    // TODO
+    // TODO URGENT
     func estGagnant(pos:Position) -> Bool{
-        return false
     }
 
     // renvoie le nombre de piece sur une ligne

@@ -74,7 +74,20 @@ struct Position: PositionProtocol{
     //                 : (2, 2)
     // exemple : si la position est sur la ligne 2 et la colonne 2 : itère sur les valeurs suivante : (1, 1) -> (2, 1) -> (1, 2) -> (2, 2) -> nil
     func makeIterator() -> PosCarreIterator{
-        let PosCarre = PosCarreIterator.init()
+        let tmpL = getLigne
+        let tmpC = getColonne
+        if tmpL > 3{
+            tmpL -= 1
+        } else if tmpL <0{
+            tmpL += 1
+        }
+        if tmpC > 3{
+            tmpC -= 1
+        } else if tmpC < 0{
+            tmpC += 1
+        }
+
+        let PosCarre = PosCarreIterator.init(pos: (tmpL, tmpC))
         return PosCarre
     }
 }
@@ -87,7 +100,11 @@ struct PosCarreIterator : PosCarreIteratorProtocol {
     init(){
         self.index = 0
         self.values = [(0,0)]
+    }
 
+    init(pos : (Int,Int)){
+        self.index = 0
+        self.values = [(pos.0,pos.1),(pos.0+1,pos.1),(pos.0,pos.1+1),(pos.0+1,pos.1+1)]
     }
 
     mutating func next() -> (Int, Int)?{
