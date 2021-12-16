@@ -2,11 +2,11 @@ struct Position: PositionProtocol{
 
     /// estOccupée : Position -> Bool
     /// vérifie si la position est occupée
-    private var estOccupee : Bool
+    private(set) var estOccupee : Bool
     private(set) var contenu : Piece?
-    private var getLigne : Int
-    private var getColonne : Int
-    private var estGagnant : Bool
+    private(set) var getLigne : Int
+    private(set) var getColonne : Int
+    internal var estGagnant : Bool
 
     
     // TODO : probleme avec la variable "contenu", le compilateur trouve l'affectation ambigûe
@@ -28,7 +28,7 @@ struct Position: PositionProtocol{
 
     /// placerPiece : Position x Piece -> Position
     /// place une piece sur la position
-    mutating func placerPiece(piece:Piece) -> Position {
+    mutating func placerPiece(piece:Piece){
         self.contenu = Piece
         return self
     }

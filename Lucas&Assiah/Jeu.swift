@@ -1,19 +1,19 @@
 struct Jeu : JeuProtocol{
     private var modeDifficile : Bool
-    private var tab : [[Position]]
+    private var tab : [[Position]] = [[]]
     private(set) var nbPieceReserve : Int 
     private(set) var nbPiecePlateau : Int 
-    private var reserve : [Piece]
+    private var reserve : [Piece] = []
 
    /// init : modeDifficile : Bool -> Jeu
     /// créer un nouveau jeu
     /// modeDifficile : Bool si le mode de jeu est difficile, 
     /// alors il y a la possibilié de gagner en posant 4 pièces avec une caracteristique identique en formant un carré de 2x2
     init(modeDifficile: Bool) {
-    self.modeDifficile = modeDifficile
-    self.nbPieceReserve = 16
-    self.nbPiecePlateau = 0
-    self.reserve[1] = Piece.init(estBlanche:false, estRonde:false, estRemplie:false, estGrande:false)
+        self.modeDifficile = modeDifficile
+        self.nbPieceReserve = 16
+        self.nbPiecePlateau = 0
+        self.reserve[0] = Piece.init(estBlanche:false, estRonde:false, estRemplie:false, estGrande:false)
     }
 
 
@@ -101,7 +101,7 @@ struct Jeu : JeuProtocol{
     // diagonale decroissante (true) : de (1, 1) à (4, 4) \ 
     // diagonale croissante (false) : de (1, 4) à (4, 1) /
     func nbPieceDiagonale(decroissante: Bool) -> Int{
-        var nbPieceDiagonale = 0
+        var nbPieceDiagonale : Int = 0
         if decroissante == true{
             for i in 0...3{
                 if getPosition(x:i,y:3-i)?.getPiece() != nil{
@@ -113,9 +113,9 @@ struct Jeu : JeuProtocol{
                 if getPosition(x:3-i,y:i)?.getPiece() != nil{
                     nbPieceDiagonale += 1
                 }else{}
+            }
         }
         return nbPieceDiagonale
-        }
     }
    
     // renvoie le nombre de piece dans un carre
@@ -172,12 +172,13 @@ struct Jeu : JeuProtocol{
     // makeIterator : Jeu -> Piece
     // iterator sur toutes les pieces de la reserve
     func makeItReserve() -> PiecesIterator{
-
+        return PiecesIterator.init(tab : self.reserve)
     }
 
     // makeIterator : Jeu -> Position
     // iterator sur toutes les positions du jeu
     func makeIterator() -> PositionIterator{
+        return PositionIterator.init(tab : self.tab)
 
     }
 
@@ -185,13 +186,14 @@ struct Jeu : JeuProtocol{
     // pre : 1 <= ligne <= 4
     //     : si une position de la ligne ne contient pas de piece, on passe à la position suivante avant de return
     func makeItLigne(ligne : Int) -> LigneIterator{
-
+        return LigneIterator.init()
     }
 
     // iterator sur toutes les pièces d'une colonne
     // pre : 1 <= colonne <= 4 
     //     : si une position de la colonne ne contient pas de piece, on passe à la position suivante avant de return
     func makeItColonne(colonne: Int) -> ColonneIterator{
+        return ColonneIterator.init()
 
     }
 
@@ -200,6 +202,7 @@ struct Jeu : JeuProtocol{
     // diagonale croissante (false) : de (1, 4) à (4, 1) /
     //     : si une position de la diagonale ne contient pas de piece, on passe à la position suivante avant de return
     func makeItDiagonale(decroissante:Bool) -> DiagonaleIterator{
+        return DiagonaleIterator.init()
 
     }
 
@@ -209,28 +212,63 @@ struct Jeu : JeuProtocol{
     // exemple, si on donne la position (1,1), l'iterator va renvoyer les Pieces situées dans les Positions aux coordonnées (1,1) -> (2, 1) -> (1, 2) -> (2,2) puis nil à la fin de l'iteration
     // si chacune des positions contiens bien une piece. 
     func makeItCarre(posCarre:(Int, Int)) -> CarreIterator{
-
+        return CarreIterator.init()
     }
     
     
 }
 
 struct PiecesIterator : IteratorProtocol {
-
+    private var tab : [Piece] = []
+    private var index : Int = 0
 
     init(){
 
     }
-    mutating func next() -> Piece?
+
+    init(tab : [Piece]){
+        self.tab = tab
+    }
+
+    mutating func next() -> Piece?{
+        if index < tab.count{
+            defer{
+                index += 1
+            }
+            return self.tab[index]
+        }else { 
+            return nil
+        }
+    }
 }
 
 struct PositionIterator : IteratorProtocol {
-
+    private var tab : [[Position]] = [[]]
+    private var index : Int = 0
+    private var jndex : Int = 0
 
     init(){
 
     }
-    mutating func next() -> Position?
+
+    init(tab : [[Position]]){
+        self.tab = tab
+    }
+
+    mutating func next() -> Position?{
+        if index == tab.count{
+            return nil
+        }
+        if jndex == tab[0].count{
+            jndex = 0 
+            index += 1
+        }
+        defer{
+            jndex += 1
+        }
+        return self.tab[index][jndex]
+
+    }
 }
 
 struct LigneIterator : IteratorProtocol {
@@ -239,7 +277,9 @@ struct LigneIterator : IteratorProtocol {
     init(){
 
     }
-    mutating func next() -> Piece?
+    mutating func next() -> Piece?{
+        return nil
+    }
 }
 
 struct ColonneIterator : IteratorProtocol {
@@ -248,7 +288,9 @@ struct ColonneIterator : IteratorProtocol {
     init(){
 
     }
-    mutating func next() -> Piece?
+    mutating func next() -> Piece?{
+        return nil
+    }
 }
 
 struct DiagonaleIterator : IteratorProtocol {
@@ -257,7 +299,9 @@ struct DiagonaleIterator : IteratorProtocol {
     init(){
 
     }
-    mutating func next() -> Piece?
+    mutating func next() -> Piece?{
+        return nil
+    }
 }
 
 struct CarreIterator : IteratorProtocol {
@@ -266,5 +310,7 @@ struct CarreIterator : IteratorProtocol {
     init(){
 
     }
-    mutating func next() -> Piece?
+    mutating func next() -> Piece?{
+        return nil
+    }
 }

@@ -43,37 +43,37 @@ func saisieInt(max:Int) -> Int{
 
 func affiche_reserve(j:Jeu) {
     var i = 1
-    var reserveIterator = jeu.makeItReserve()
+    var reserveIterator = j.makeItReserve()
     while let piece = reserveIterator.next() {
         print(i, terminator:" | ")
         i += 1
-        printPiece(p:Piece)
+        printPiece(p:piece)
         print()
     }
 }
 
-func choix_piece_reserve(j:Jeu, choix:Int) -> Piece {
-    var reserveIterator = jeu.makeItReserve()
-    j = 0
-    while j != choix {
-        j += 1
+func choix_piece_reserve(j:inout Jeu, choix:Int) -> Piece {
+    var reserveIterator = j.makeItReserve()
+    var k = 0
+    while k != choix {
+        k += 1
         let piece_joueur = reserveIterator.next()
         do {
-            jeu.choisirPiece(piece:piece_joueur)
+            j.choisirPiece(piece:piece_joueur!)
             return piece_joueur
-        } catch error {
+        } catch InvalidPieceError.error {
             fatalError("erreur")
         }
     }
 }
 
 func choix(j:Jeu) -> Piece {
-    affiche_reserve(j:jeu)
+    affiche_reserve(j:Jeu)
     // saisie de l'utilisateur
     print("> choisissez la pièce de votre adversaire parmis les pièces disponibles :")
-    choix_joueur = saisieInt(max:jeu.nbPieceReserve+1) //+1 car le compteur commence à 1 dans affiche_reserve()
+    choix_joueur = saisieInt(max:j.nbPieceReserve+1) //+1 car le compteur commence à 1 dans affiche_reserve()
     // choix valide, on enleve la piece de la reserve et on recupère la piece choisie
-    piece_choisie = choix_piece_reserve(j:jeu, choix:choix_joueur)
+    piece_choisie = choix_piece_reserve(j:Jeu, choix:choix_joueur)
 }
 
 func printPlateau(jeu:Jeu, victoire:Bool) {

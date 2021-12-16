@@ -1,6 +1,6 @@
 struct Piece : PieceProtocol, Equatable{
 
-    private var estBlanche : Bool, estRonde : Bool, estRemplie : Bool, estGrande : Bool
+    private(set) var estBlanche : Bool, estRonde : Bool, estRemplie : Bool, estGrande : Bool
     /// init : Bool x Bool x Bool x Bool -> Piece 
     /// crée une piece avec les caractéristiques : couleur, forme, remplissage, hauteur
 
