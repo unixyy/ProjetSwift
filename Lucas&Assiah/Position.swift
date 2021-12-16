@@ -9,13 +9,15 @@ struct Position: PositionProtocol{
     internal var estGagnant : Bool
 
     
-    // TODO : probleme avec la variable "contenu", le compilateur trouve l'affectation ambigûe
+
     init(){
         self.estOccupee = false
         self.contenu = nil
         self.estGagnant = false
+        self.getLigne = 0
+        self.getColonne = 0
     } 
-    // TODO : Même chose qu'au dessus
+
     init(pos:(Int,Int)){
         self.estOccupee = false
         self.contenu = nil
@@ -29,8 +31,7 @@ struct Position: PositionProtocol{
     /// placerPiece : Position x Piece -> Position
     /// place une piece sur la position
     mutating func placerPiece(piece:Piece){
-        self.contenu = Piece
-        return self
+        self.contenu = piece
     }
 
 
@@ -85,7 +86,7 @@ struct PosCarreIterator : PosCarreIteratorProtocol {
 
     init(){
         self.index = 0
-
+        self.values = [(0,0)]
 
     }
 

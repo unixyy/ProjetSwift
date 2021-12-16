@@ -14,6 +14,21 @@ struct Jeu : JeuProtocol{
         self.nbPieceReserve = 16
         self.nbPiecePlateau = 0
         self.reserve[0] = Piece.init(estBlanche:false, estRonde:false, estRemplie:false, estGrande:false)
+        self.reserve[1] = Piece.init(estBlanche:false, estRonde:false, estRemplie:false, estGrande:true)
+        self.reserve[2] = Piece.init(estBlanche:false, estRonde:false, estRemplie:true, estGrande:false)
+        self.reserve[3] = Piece.init(estBlanche:false, estRonde:false, estRemplie:true, estGrande:true)
+        self.reserve[4] = Piece.init(estBlanche:false, estRonde:true, estRemplie:false, estGrande:false)
+        self.reserve[5] = Piece.init(estBlanche:false, estRonde:true, estRemplie:false, estGrande:true)
+        self.reserve[6] = Piece.init(estBlanche:false, estRonde:true, estRemplie:true, estGrande:false)
+        self.reserve[7] = Piece.init(estBlanche:false, estRonde:true, estRemplie:true, estGrande:true)
+        self.reserve[8] = Piece.init(estBlanche:true, estRonde:false, estRemplie:false, estGrande:false)
+        self.reserve[9] = Piece.init(estBlanche:true, estRonde:false, estRemplie:false, estGrande:true)
+        self.reserve[10] = Piece.init(estBlanche:true, estRonde:false, estRemplie:true, estGrande:false)
+        self.reserve[11] = Piece.init(estBlanche:true, estRonde:false, estRemplie:true, estGrande:true)
+        self.reserve[12] = Piece.init(estBlanche:true, estRonde:true, estRemplie:false, estGrande:false)
+        self.reserve[13] = Piece.init(estBlanche:true, estRonde:true, estRemplie:false, estGrande:true)
+        self.reserve[14] = Piece.init(estBlanche:true, estRonde:true, estRemplie:true, estGrande:false)
+        self.reserve[15] = Piece.init(estBlanche:true, estRonde:true, estRemplie:true, estGrande:true)
     }
 
 
@@ -23,9 +38,6 @@ struct Jeu : JeuProtocol{
         return nbPieceReserve != 0
     }
 
-    enum InvalidPieceError: Error {
-        case error
-    }
 
     /// choisirPiece : Jeu x Piece -> Jeu
     /// enlève la pièce donnée en paramètre de la reserve
@@ -313,4 +325,8 @@ struct CarreIterator : IteratorProtocol {
     mutating func next() -> Piece?{
         return nil
     }
+}
+
+enum InvalidPieceError: Error {
+    case error
 }
