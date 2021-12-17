@@ -83,7 +83,133 @@ struct Jeu : JeuProtocol{
     /// victoire = au moins 1 caractèristique identique sur 4 pièces alignées sur une même ligne, colonne ou diagonale
     /// post : modifie le paramètre estGagnant des 4 positions gagnantes
     // TODO URGENT
-    func estGagnant(pos:Position) -> Bool{
+    func estGagnant(pos:Position) -> Bool {
+        var winner : Bool = false
+        // On Itère sur les colonnes
+        var ItColonne = self.makeItColonne(colonne : pos.getColonne())
+        var tabPieces : [Piece] = []
+        var cpt : Int = 0
+        while let ItColonne = ItColonne.next() {
+            tabPieces[cpt] = ItColonne
+            cpt += 1
+        }
+        if cpt == 3 {
+            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                winner = true
+            }
+        }
+
+        // On Itère sur les lignes
+        var ItLigne = self.makeItLigne(ligne : pos.getLigne())
+        tabPieces = []
+        cpt = 0
+        while let ItLigne = ItLigne.next() {
+            tabPieces[cpt] = ItLigne
+            cpt += 1
+        }
+        if cpt == 3 {
+            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                winner = true
+            }
+        }
+
+        // On Itère sur la diagonale descendante
+        var ItDiagoDesc = self.makeItDiagonale(desc : true)
+        tabPieces = []
+        cpt = 0
+        while let ItDiagoDesc = ItDiagoDesc.next() {
+            tabPieces[cpt] = ItDiagoDesc
+            cpt += 1
+        }
+        if cpt == 3 {
+            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                winner = true
+            }
+        }
+
+        // On Itère sur la diagonale ascendante
+        var ItDiagoAsc = self.makeItDiagonale(desc : false)
+        tabPieces = []
+        cpt = 0
+        while let ItDiagoAsc = ItDiagoAsc.next() {
+            tabPieces[cpt] = ItDiagoAsc
+            cpt += 1
+        }
+        if cpt == 3 {
+            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                winner = true
+            }
+        }
+
+        if self.modeDifficile {
+            // On Itère sur les carrés
+            // Carre Haut Gauche
+            // Si on est capable de créer un itérateur carré sur la case (x-1,y-1) 
+            if (pos.getColonne() != 1 && pos.getLigne() != 1) {
+                var ItCarreHG = self.makeItCarre(pos : (pos.getColonne()-1,pos.getLigne()-1))
+                tabPieces = []
+                cpt = 0
+                while let ItCarreHG = ItCarreHG.next() {
+                    tabPieces[cpt] = ItCarreHG
+                    cpt += 1
+                }
+                if cpt == 3 {
+                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                        winner = true
+                    }
+                }
+            }
+            // Carre Haut Droit 
+            // Si on est capable de créer un itérateur carré sur la case (x-1,y)
+            if (pos.getColonne() != 1 && pos.getLigne() != 4) {
+                var ItCarreHD = self.makeItCarre(pos : (pos.getColonne()-1,pos.getLigne()))
+                tabPieces = []
+                cpt = 0
+                while let ItCarreHD = ItCarreHD.next() {
+                    tabPieces[cpt] = ItCarreHD
+                    cpt += 1
+                }
+                if cpt == 3 {
+                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                        winner = true
+                    }
+                }
+            }
+            // Carre Bas Gauche
+            // Si on est capable de créer un itérateur carré sur la case (x,y-1)
+            if (pos.getColonne() != 4 && pos.getLigne() != 1) {
+                var ItCarreBG = self.makeItCarre(pos : (pos.getColonne(),pos.getLigne()-1))
+                tabPieces = []
+                cpt = 0
+                while let ItCarreBG = ItCarreBG.next() {
+                    tabPieces[cpt] = ItCarreBG
+                    cpt += 1
+                }
+                if cpt == 3 {
+                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                        winner = true
+                    }
+                }
+            }
+            // Carre Bas Droit 
+            // Si on est capable de créer un itérateur carré sur la case (x,y)
+            if (pos.getColonne() != 4 && pos.getLigne() != 4) {
+                var ItCarreBD = self.makeItCarre(pos : (pos.getColonne(),pos.getLigne()))
+                tabPieces = []
+                cpt = 0
+                while let ItCarreBD = ItCarreBD.next() {
+                    tabPieces[cpt] = ItCarreBD
+                    cpt += 1
+                }
+                if cpt == 3 {
+                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                        winner = true
+                    }
+                }
+            }
+        }
+        return winner
+
     }
 
     // renvoie le nombre de piece sur une ligne
@@ -303,7 +429,7 @@ struct LigneIterator : IteratorProtocol {
                 return temp
             }
             else {
-                return next()
+                return self.next()
             }
             
         }
@@ -329,7 +455,7 @@ struct ColonneIterator : IteratorProtocol {
                 return temp
             }
             else {
-                return next()
+                return self.next()
             }
         }
         
@@ -364,7 +490,7 @@ struct DiagonaleIterator : IteratorProtocol {
                 return temp
             }
             else {
-                return next()
+                return self.next()
             }
         }
         
@@ -394,7 +520,7 @@ struct CarreIterator : IteratorProtocol {
                 return temp
             }
             else {
-                return next()
+                return self.next()
             }
         }
     }
