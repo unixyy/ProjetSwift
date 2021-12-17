@@ -54,13 +54,15 @@
 /// estGagnant(init()) == false
 
 protocol PositionProtocol {
+
+    associatedtype PosCarreIterator : IteratorProtocol
     /// init -> Position
     /// crée une position
     init () 
 
     /// estOccupée : Position -> Bool
     /// vérifie si la position est occupée
-    var estOccupée : Bool { get }
+    var estOccupee : Bool { get }
 
     /// placerPiece : Position x Piece -> Position
     /// place une piece sur la position
@@ -99,5 +101,5 @@ protocol PositionProtocol {
 
 protocol PosCarreIteratorProtocol : IteratorProtocol {
     init()
-    next() -> (Int, Int)?
+    mutating func next() -> (Int, Int)?
 }

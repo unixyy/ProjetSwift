@@ -1,0 +1,5 @@
+- rajout des associatedtype
+- rajout de mutating func next() ( ce n'était que des next())
+
+- rajout d'une fonction dans Piece pour pouvoir faire des verifications conditionelles avec Equatable
+- rajout de fonctions init() paramètrées sur les Structures
