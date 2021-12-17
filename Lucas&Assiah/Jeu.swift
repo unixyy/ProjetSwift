@@ -197,14 +197,14 @@ struct Jeu : JeuProtocol{
     // pre : 1 <= ligne <= 4
     //     : si une position de la ligne ne contient pas de piece, on passe à la position suivante avant de return
     func makeItLigne(ligne : Int) -> LigneIterator{
-        return LigneIterator.init()
+        return LigneIterator.init(tab : self.tab, lig : ligne)
     }
 
     // iterator sur toutes les pièces d'une colonne
     // pre : 1 <= colonne <= 4 
     //     : si une position de la colonne ne contient pas de piece, on passe à la position suivante avant de return
-    func makeItColonne(colonne: Int) -> ColonneIterator{
-        return ColonneIterator.init()
+    func makeItColonne(colonne : Int) -> ColonneIterator{
+        return ColonneIterator.init(tab : self.tab, col : colonne)
 
     }
 
@@ -212,8 +212,8 @@ struct Jeu : JeuProtocol{
     // diagonale decroissante (true) : de (1, 1) à (4, 4) \ 
     // diagonale croissante (false) : de (1, 4) à (4, 1) /
     //     : si une position de la diagonale ne contient pas de piece, on passe à la position suivante avant de return
-    func makeItDiagonale(decroissante:Bool) -> DiagonaleIterator{
-        return DiagonaleIterator.init()
+    func makeItDiagonale(decroissante : Bool) -> DiagonaleIterator{
+        return DiagonaleIterator.init(tab : self.tab, decr : decroissante)
 
     }
 
@@ -223,7 +223,7 @@ struct Jeu : JeuProtocol{
     // exemple, si on donne la position (1,1), l'iterator va renvoyer les Pieces situées dans les Positions aux coordonnées (1,1) -> (2, 1) -> (1, 2) -> (2,2) puis nil à la fin de l'iteration
     // si chacune des positions contiens bien une piece. 
     func makeItCarre(posCarre:(Int, Int)) -> CarreIterator{
-        return CarreIterator.init()
+        return CarreIterator.init(tab : self.tab, posC : posCarre)
     }
     
     
@@ -283,46 +283,120 @@ struct PositionIterator : IteratorProtocol {
 }
 
 struct LigneIterator : IteratorProtocol {
+    private var ligne : [Position] = []
+    private var currentPos : Int
 
-
-    init(){
-
+    init(tab : [[Position]], lig : Int){
+        for i in 0..<tab.count{
+            self.ligne[i] = tab[i][lig]
+        }
+        self.currentPos = 0
     }
     mutating func next() -> Piece?{
-        return nil
+        if currentPos == ligne.count{
+            return nil
+        }
+        else {
+            var temp = ligne[currentPos].getPiece()
+            currentPos += 1
+            if let temp = Piece {
+                return temp
+            }
+            else {
+                return next()
+            }
+            
+        }
     }
 }
 
 struct ColonneIterator : IteratorProtocol {
+    private var colonne : [Position] = []
+    private var currentPos : Int
 
-
-    init(){
-
+    init(tab : [[Position]], col : Int){
+        self.colonne = tab[col]
+        self.currentPos = 0
     }
     mutating func next() -> Piece?{
-        return nil
+        if currentPos == colonne.count{
+            return nil
+        }
+        else {
+            var temp = colonne[currentPos].getPiece()
+            currentPos += 1
+            if let temp = Piece {
+                return temp
+            }
+            else {
+                return next()
+            }
+        }
+        
     }
 }
 
 struct DiagonaleIterator : IteratorProtocol {
+    private var diagonale : [Position] = []
+    private var currentPos : Int
 
-
-    init(){
-
+    init(tab : [[Position]], desc : Bool){
+        if desc {
+            for i in 0..<tab.count{
+                self.diagonale = tab[i][i]
+            }
+        }
+        else {
+            for i in 0..<tab.count{
+                self.diagonale = tab[i][tab.count-i]
+            }
+        }
+        self.currentPos = 0
     }
     mutating func next() -> Piece?{
-        return nil
+        if currentPos == diagonale.count{
+            return nil
+        }
+        else {
+            var temp = diagonale[currentPos].getPiece()
+            currentPos += 1
+            if let temp = Piece {
+                return temp
+            }
+            else {
+                return next()
+            }
+        }
+        
     }
 }
 
 struct CarreIterator : IteratorProtocol {
+    private var carre : [Position] = []
+    private var currentPos : Int = 0
 
-
-    init(){
-
+    init(tab : [[Position]], posC : (Int,Int)){
+        var c = posC[0]
+        var l = posC[1]
+        self.carre[0] = tab[c][l]
+        self.carre[1] = tab[c+1][l]
+        self.carre[2] = tab[c][l+1]
+        self.carre[3] = tab[c+1][l+1]
     }
     mutating func next() -> Piece?{
-        return nil
+        if currentPos == carre.count{
+            return nil
+        }
+        else {
+            var temp = carre[currentPos].getPiece()
+            currentPos += 1
+            if let temp = Piece {
+                return temp
+            }
+            else {
+                return next()
+            }
+        }
     }
 }
 
