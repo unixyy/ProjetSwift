@@ -61,19 +61,19 @@ func choix_piece_reserve(j:inout Jeu, choix:Int) -> Piece {
         do {
             j.choisirPiece(piece:piece_joueur!)
             return piece_joueur
-        } catch InvalidPieceError.error {
+        } catch {
             fatalError("erreur")
         }
     }
 }
 
 func choix(j:Jeu) -> Piece {
-    affiche_reserve(j:Jeu)
+    affiche_reserve(j:j)
     // saisie de l'utilisateur
     print("> choisissez la pièce de votre adversaire parmis les pièces disponibles :")
     choix_joueur = saisieInt(max:j.nbPieceReserve+1) //+1 car le compteur commence à 1 dans affiche_reserve()
     // choix valide, on enleve la piece de la reserve et on recupère la piece choisie
-    piece_choisie = choix_piece_reserve(j:Jeu, choix:choix_joueur)
+    piece_choisie = choix_piece_reserve(j:j, choix:choix_joueur)
 }
 
 func printPlateau(jeu:Jeu, victoire:Bool) {
@@ -109,7 +109,7 @@ func printPlateau(jeu:Jeu, victoire:Bool) {
         // print des numero de ligne
         print("0\(i) ", terminator:"")
         // print des 4 positions par ligne
-        for j in 1...4 {
+        for k in 1...4 {
             let position = positionIterator.next()
             print("| ", terminator:"")
             // s'il y a une piece on print ses caracteristiques
@@ -119,7 +119,7 @@ func printPlateau(jeu:Jeu, victoire:Bool) {
                 }
                 // sinon on print la position de la case pour le joueur
                 else {
-                    print("(\(i), \(j))", terminator:"")
+                    print("(\(i), \(k))", terminator:"")
                 }
             }
             else {
@@ -177,7 +177,7 @@ func choixDifficulte() -> Bool {
 ---------- MAIN ----------
 */
 var modeDifficile = choixDifficulte()
-var jeu = Jeu(modeDifficile:modeDifficile)
+var jeu = Jeu.init(modeDifficile:modeDifficile)
 var victoire = false
 var joueur = 1
 // premier tour, le premier joueur ne fait que choisir une pièce
