@@ -57,23 +57,26 @@ func choix_piece_reserve(j:inout Jeu, choix:Int) -> Piece {
     var k = 0
     while k != choix {
         k += 1
-        let piece_joueur = reserveIterator.next()
         do {
-            j.choisirPiece(piece:piece_joueur!)
+            if let piece_joueur = reserveIterator.next(){
+            try j.choisirPiece(piece:piece_joueur)
             return piece_joueur
+            }
         } catch {
             fatalError("erreur")
         }
     }
+    return reserveIterator.next()!
 }
 
-func choix(j:Jeu) -> Piece {
+func choix(j:inout Jeu) -> Piece {
     affiche_reserve(j:j)
     // saisie de l'utilisateur
     print("> choisissez la pièce de votre adversaire parmis les pièces disponibles :")
-    choix_joueur = saisieInt(max:j.nbPieceReserve+1) //+1 car le compteur commence à 1 dans affiche_reserve()
+    let choix_joueur = saisieInt(max:j.nbPieceReserve+1) //+1 car le compteur commence à 1 dans affiche_reserve()
     // choix valide, on enleve la piece de la reserve et on recupère la piece choisie
-    piece_choisie = choix_piece_reserve(j:j, choix:choix_joueur)
+    let piece_choisie = choix_piece_reserve(j:&j, choix:choix_joueur)
+    return piece_choisie
 }
 
 func printPlateau(jeu:Jeu, victoire:Bool) {
@@ -113,8 +116,8 @@ func printPlateau(jeu:Jeu, victoire:Bool) {
             let position = positionIterator.next()
             print("| ", terminator:"")
             // s'il y a une piece on print ses caracteristiques
-            if !victoire || position.estGagnant { // s'il y a victoire, on affiche uniquement les positions gagnantes. 
-                if let piece = position.getPiece() {
+            if !victoire || position!.estGagnant { // s'il y a victoire, on affiche uniquement les positions gagnantes. 
+                if let piece = position!.getPiece() {
                     printPiece(p:piece)
                 }
                 // sinon on print la position de la case pour le joueur
@@ -136,7 +139,7 @@ func printPlateau(jeu:Jeu, victoire:Bool) {
 // print un motif de la manière suivante : "startPatternPatternPatternPattern|"
 func printPattern(start:String, pattern:String) {
     print(start, terminator:"")
-    for i in 1...4 {
+    for _ in 1...4 {
         print(pattern, terminator:"")
     }
     print("|")
@@ -144,16 +147,17 @@ func printPattern(start:String, pattern:String) {
 
 func getPos(x:Int, y:Int) -> Position {
     if let pos = jeu.getPosition(x:x, y:y) {
-        if !pos.estOccupée {
+        if !pos.estOccupee {
             // pos est assurée d'être de type Position et la position n'est pas occupée
             return pos
         }
     }
     else{
-        x1 = saisieInt(max:5) // max exclu
-        y1 = saisieInt(max:5) // max exclu
+        let x1 = saisieInt(max:5) // max exclu
+        let y1 = saisieInt(max:5) // max exclu
         return getPos(x:x1, y:y1) // getPos est forcement du type Position donc on s'assure de retourner le bon type
     }
+    return jeu.getPosition(x:0,y:0)!
 }
 
 func choixDifficulte() -> Bool {
@@ -185,7 +189,7 @@ print("Joueur \(joueur) c'est à vous de jouer : ")
 
 while !victoire && jeu.nbPiecePlateau > 0 {
     // choix de la pièce pour l'autre joueur
-    var pieceJoueur = choix(j:jeu)
+    let pieceJoueur = choix(j:&jeu)
     // changement de joueur
     if joueur == 1 { joueur = 2}
     else { joueur = 1}
@@ -195,24 +199,24 @@ while !victoire && jeu.nbPiecePlateau > 0 {
     printPiece(p:pieceJoueur)
     print()
     // affichage du plateau
-    printPlateau(j:jeu)
+    printPlateau(jeu:jeu,victoire:victoire)
     print("Choisissez une case où placer votre pièce :")
     print("Choix de la ligne : ", terminator:"")
-    var x = saisieInt(max:5) // max exclu
+    let x = saisieInt(max:5) // max exclu
     print("Choix de la colonne : ", terminator:"")
-    var y = saisieInt(max:5) // max exclu
+    let y = saisieInt(max:5) // max exclu
     // recuperation de la position choisie par le joueur
     var posJoueur = getPos(x:x, y:y)
-    jeu.placerPiece(pos:posJoueur, piece:pieceJoueur)
+    jeu.placerPiece(pos:&posJoueur, piece:pieceJoueur)
     victoire = jeu.estGagnant(pos:posJoueur)
 }
 if victoire {
     print("Joueur \(joueur) A GAGNÉ !")
-    printPlateau(j:jeu)
+    printPlateau(jeu:jeu,victoire:victoire)
 
 }
 else {
     print("ÉGALITÉ !")
-    printPlateau(j:jeu)
+    printPlateau(jeu:jeu, victoire:victoire)
 }
 
