@@ -73,7 +73,7 @@ struct Jeu : JeuProtocol{
     // placerPiece : Jeu x Position x Piece -> Jeu
     // place une piece à une position donnée sur le plateau
     // placer une piece augmente le nombre de piece sur le plateau de 1
-    mutating func placerPiece(pos:Position, piece:Piece){
+    mutating func placerPiece(pos: inout Position, piece:Piece){
         pos.placerPiece(piece:piece)
         nbPiecePlateau += 1
     }
@@ -83,7 +83,133 @@ struct Jeu : JeuProtocol{
     /// victoire = au moins 1 caractèristique identique sur 4 pièces alignées sur une même ligne, colonne ou diagonale
     /// post : modifie le paramètre estGagnant des 4 positions gagnantes
     // TODO URGENT
-    func estGagnant(pos:Position) -> Bool{
+    func estGagnant(pos:Position) -> Bool {
+        var winner : Bool = false
+        // On Itère sur les colonnes
+        var ItColonne = self.makeItColonne(colonne : pos.getColonne)
+        var tabPieces : [Piece] = []
+        var cpt : Int = 0
+        while let ItColonne = ItColonne.next() {
+            tabPieces[cpt] = ItColonne
+            cpt += 1
+        }
+        if cpt == 3 {
+            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                winner = true
+            }
+        }
+
+        // On Itère sur les lignes
+        var ItLigne = self.makeItLigne(ligne : pos.getLigne)
+        tabPieces = []
+        cpt = 0
+        while let ItLigne = ItLigne.next() {
+            tabPieces[cpt] = ItLigne
+            cpt += 1
+        }
+        if cpt == 3 {
+            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                winner = true
+            }
+        }
+
+        // On Itère sur la diagonale descendante
+        var ItDiagoDesc = self.makeItDiagonale(decroissante : true)
+        tabPieces = []
+        cpt = 0
+        while let ItDiagoDesc = ItDiagoDesc.next() {
+            tabPieces[cpt] = ItDiagoDesc
+            cpt += 1
+        }
+        if cpt == 3 {
+            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                winner = true
+            }
+        }
+
+        // On Itère sur la diagonale ascendante
+        var ItDiagoAsc = self.makeItDiagonale(decroissante : false)
+        tabPieces = []
+        cpt = 0
+        while let ItDiagoAsc = ItDiagoAsc.next() {
+            tabPieces[cpt] = ItDiagoAsc
+            cpt += 1
+        }
+        if cpt == 3 {
+            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                winner = true
+            }
+        }
+
+        if self.modeDifficile {
+            // On Itère sur les carrés
+            // Carre Haut Gauche
+            // Si on est capable de créer un itérateur carré sur la case (x-1,y-1) 
+            if (pos.getColonne != 1 && pos.getLigne != 1) {
+                var ItCarreHG = self.makeItCarre(posCarre : (pos.getColonne-1,pos.getLigne-1))
+                tabPieces = []
+                cpt = 0
+                while let ItCarreHG = ItCarreHG.next() {
+                    tabPieces[cpt] = ItCarreHG
+                    cpt += 1
+                }
+                if cpt == 3 {
+                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                        winner = true
+                    }
+                }
+            }
+            // Carre Haut Droit 
+            // Si on est capable de créer un itérateur carré sur la case (x-1,y)
+            if (pos.getColonne != 1 && pos.getLigne != 4) {
+                var ItCarreHD = self.makeItCarre(posCarre : (pos.getColonne-1,pos.getLigne))
+                tabPieces = []
+                cpt = 0
+                while let ItCarreHD = ItCarreHD.next() {
+                    tabPieces[cpt] = ItCarreHD
+                    cpt += 1
+                }
+                if cpt == 3 {
+                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                        winner = true
+                    }
+                }
+            }
+            // Carre Bas Gauche
+            // Si on est capable de créer un itérateur carré sur la case (x,y-1)
+            if (pos.getColonne != 4 && pos.getLigne != 1) {
+                var ItCarreBG = self.makeItCarre(posCarre : (pos.getColonne,pos.getLigne-1))
+                tabPieces = []
+                cpt = 0
+                while let ItCarreBG = ItCarreBG.next() {
+                    tabPieces[cpt] = ItCarreBG
+                    cpt += 1
+                }
+                if cpt == 3 {
+                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                        winner = true
+                    }
+                }
+            }
+            // Carre Bas Droit 
+            // Si on est capable de créer un itérateur carré sur la case (x,y)
+            if (pos.getColonne != 4 && pos.getLigne != 4) {
+                var ItCarreBD = self.makeItCarre(posCarre : (pos.getColonne,pos.getLigne))
+                tabPieces = []
+                cpt = 0
+                while let ItCarreBD = ItCarreBD.next() {
+                    tabPieces[cpt] = ItCarreBD
+                    cpt += 1
+                }
+                if cpt == 3 {
+                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
+                        winner = true
+                    }
+                }
+            }
+        }
+        return winner
+
     }
 
     // renvoie le nombre de piece sur une ligne
@@ -213,7 +339,7 @@ struct Jeu : JeuProtocol{
     // diagonale croissante (false) : de (1, 4) à (4, 1) /
     //     : si une position de la diagonale ne contient pas de piece, on passe à la position suivante avant de return
     func makeItDiagonale(decroissante : Bool) -> DiagonaleIterator{
-        return DiagonaleIterator.init(tab : self.tab, decr : decroissante)
+        return DiagonaleIterator.init(tab : self.tab, desc : decroissante)
 
     }
 
@@ -297,13 +423,13 @@ struct LigneIterator : IteratorProtocol {
             return nil
         }
         else {
-            var temp = ligne[currentPos].getPiece()
-            currentPos += 1
-            if let temp = Piece {
+            if let temp = ligne[currentPos].getPiece() {
+                currentPos += 1
                 return temp
             }
             else {
-                return next()
+                currentPos += 1
+                return self.next()
             }
             
         }
@@ -323,13 +449,13 @@ struct ColonneIterator : IteratorProtocol {
             return nil
         }
         else {
-            var temp = colonne[currentPos].getPiece()
-            currentPos += 1
-            if let temp = Piece {
+            if let temp = colonne[currentPos].getPiece(){
+                currentPos += 1
                 return temp
             }
             else {
-                return next()
+                currentPos += 1
+                return self.next()
             }
         }
         
@@ -343,12 +469,12 @@ struct DiagonaleIterator : IteratorProtocol {
     init(tab : [[Position]], desc : Bool){
         if desc {
             for i in 0..<tab.count{
-                self.diagonale = tab[i][i]
+                self.diagonale[i] = tab[i][i]
             }
         }
         else {
             for i in 0..<tab.count{
-                self.diagonale = tab[i][tab.count-i]
+                self.diagonale[i] = tab[i][tab.count-i]
             }
         }
         self.currentPos = 0
@@ -358,13 +484,14 @@ struct DiagonaleIterator : IteratorProtocol {
             return nil
         }
         else {
-            var temp = diagonale[currentPos].getPiece()
             currentPos += 1
-            if let temp = Piece {
+            if let temp = diagonale[currentPos].getPiece() {
+                currentPos += 1
                 return temp
             }
             else {
-                return next()
+                currentPos += 1
+                return self.next()
             }
         }
         
@@ -376,8 +503,8 @@ struct CarreIterator : IteratorProtocol {
     private var currentPos : Int = 0
 
     init(tab : [[Position]], posC : (Int,Int)){
-        var c = posC[0]
-        var l = posC[1]
+        let c = posC.0
+        let l = posC.1
         self.carre[0] = tab[c][l]
         self.carre[1] = tab[c+1][l]
         self.carre[2] = tab[c][l+1]
@@ -388,13 +515,13 @@ struct CarreIterator : IteratorProtocol {
             return nil
         }
         else {
-            var temp = carre[currentPos].getPiece()
-            currentPos += 1
-            if let temp = Piece {
+            if let temp = carre[currentPos].getPiece() {
+                currentPos += 1
                 return temp
             }
             else {
-                return next()
+                currentPos += 1
+                return self.next()
             }
         }
     }

@@ -12,6 +12,6 @@ struct Piece : PieceProtocol, Equatable{
     }
 
     private static func ==(lhs: Piece,rhs: Piece) -> Bool {
-        return lhs.estBlanche == rhs.estBlanche && lhs.estRonde == rhs.estRonde && lsh.estGrande == rhs.estGrande && lhs.estRemplie == rhs.estRemplie
+        return lhs.estBlanche == rhs.estBlanche && lhs.estRonde == rhs.estRonde && lhs.estGrande == rhs.estGrande && lhs.estRemplie == rhs.estRemplie
     }
 }

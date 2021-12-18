@@ -13,6 +13,8 @@ struct Position: PositionProtocol{
     init(){
         self.estOccupee = false
         self.contenu = nil
+        self.getLigne = 0
+        self.getColonne = 0
         self.estGagnant = false
     } 
     // TODO : Même chose qu'au dessus
@@ -29,8 +31,7 @@ struct Position: PositionProtocol{
     /// placerPiece : Position x Piece -> Position
     /// place une piece sur la position
     mutating func placerPiece(piece:Piece){
-        self.contenu = Piece
-        return self
+        self.contenu = piece
     }
 
 
@@ -85,6 +86,7 @@ struct PosCarreIterator : PosCarreIteratorProtocol {
 
     init(){
         self.index = 0
+        self.values = [(0,0)]
 
 
     }
