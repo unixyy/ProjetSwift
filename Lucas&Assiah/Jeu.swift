@@ -1,9 +1,9 @@
 struct Jeu : JeuProtocol{
     private var modeDifficile : Bool
-    private var tab : [[Position]] = [[]]
+    private var tab = Array<Array<Position>>(repeating:Array<Position>(repeating:Position.init(pos:(0,0)),count:4),count:4)
     private(set) var nbPieceReserve : Int 
     private(set) var nbPiecePlateau : Int 
-    private var reserve : [Piece] = []
+    private var reserve = Array(repeating:Piece.init(estBlanche:false,estRonde:false,estRemplie:false,estGrande:false), count:16)
 
    /// init : modeDifficile : Bool -> Jeu
     /// créer un nouveau jeu
@@ -29,6 +29,23 @@ struct Jeu : JeuProtocol{
         self.reserve[13] = Piece.init(estBlanche:true, estRonde:true, estRemplie:false, estGrande:true)
         self.reserve[14] = Piece.init(estBlanche:true, estRonde:true, estRemplie:true, estGrande:false)
         self.reserve[15] = Piece.init(estBlanche:true, estRonde:true, estRemplie:true, estGrande:true)
+
+        self.tab[0][0] = Position.init(pos:(0,0))
+        self.tab[0][1] = Position.init(pos:(0,1))
+        self.tab[0][2] = Position.init(pos:(0,2))
+        self.tab[0][3] = Position.init(pos:(0,3))
+        self.tab[1][0] = Position.init(pos:(1,0))
+        self.tab[1][1] = Position.init(pos:(1,1))
+        self.tab[1][2] = Position.init(pos:(1,2))
+        self.tab[1][3] = Position.init(pos:(1,3))
+        self.tab[2][0] = Position.init(pos:(2,0))
+        self.tab[2][1] = Position.init(pos:(2,1))
+        self.tab[2][2] = Position.init(pos:(2,2))
+        self.tab[2][3] = Position.init(pos:(2,3))
+        self.tab[3][0] = Position.init(pos:(3,0))
+        self.tab[3][1] = Position.init(pos:(3,1))
+        self.tab[3][2] = Position.init(pos:(3,2))
+        self.tab[3][3] = Position.init(pos:(3,3))
     }
 
 
@@ -390,6 +407,7 @@ struct PositionIterator : IteratorProtocol {
 
     init(tab : [[Position]]){
         self.tab = tab
+
     }
 
     mutating func next() -> Position?{

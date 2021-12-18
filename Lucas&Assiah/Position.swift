@@ -9,7 +9,6 @@ struct Position: PositionProtocol{
     internal var estGagnant : Bool
 
     
-    // TODO : probleme avec la variable "contenu", le compilateur trouve l'affectation ambigûe
     init(){
         self.estOccupee = false
         self.contenu = nil
@@ -17,7 +16,7 @@ struct Position: PositionProtocol{
         self.getColonne = 0
         self.estGagnant = false
     } 
-    // TODO : Même chose qu'au dessus
+    
     init(pos:(Int,Int)){
         self.estOccupee = false
         self.contenu = nil

@@ -21,10 +21,12 @@ func printPiece(p:Piece) {
     // R : Ronde / C : Carrée
     // R : Remplie / V : Vide
     // G : Grande / P : Petite
+    print(" ",terminator:"")
     print((p.estBlanche) ? "B" : "N", terminator:"")
     print((p.estRonde) ? "R" : "C", terminator:"")
     print((p.estRemplie) ? "R" : "V", terminator:"")
     print((p.estGrande) ? "G" : "P", terminator:"")
+    print(" ",terminator:"")
 }
 
 // le joueur saisi un nombre entre 1 et le nombre de piece dans la reserve
@@ -96,19 +98,19 @@ func printPlateau(jeu:Jeu, victoire:Bool) {
     */
     var positionIterator = jeu.makeIterator()
 
-
-    printPattern(start:"   ", pattern:"|------")
+    print("\n")
+    printPattern(start:"   ", pattern:"|--------")
     // print des numeros de colonnes
     print("   ", terminator:"")
     for c in 1...4 {
-        print("|  0\(c)  ", terminator:"")
+        print("|   0\(c)   ", terminator:"")
     }
     print("|")
     // fin print numeros colonnes
     // print de chaque ligne
     for i in 1...4 {
         // lignes séparatrice
-        printPattern(start:"   ", pattern:"|------")
+        printPattern(start:"   ", pattern:"|--------")
         // print des numero de ligne
         print("0\(i) ", terminator:"")
         // print des 4 positions par ligne
@@ -133,7 +135,7 @@ func printPlateau(jeu:Jeu, victoire:Bool) {
         print("|")
     }
     // ligne de cloture
-    printPattern(start:"   ", pattern:"|------")
+    printPattern(start:"   ", pattern:"|--------")
 }
 
 // print un motif de la manière suivante : "startPatternPatternPatternPattern|"
@@ -187,7 +189,7 @@ var joueur = 1
 // premier tour, le premier joueur ne fait que choisir une pièce
 print("Joueur \(joueur) c'est à vous de jouer : ")
 
-while !victoire && jeu.nbPiecePlateau > 0 {
+while !victoire && jeu.nbPiecePlateau < 16 {
     // choix de la pièce pour l'autre joueur
     let pieceJoueur = choix(j:&jeu)
     // changement de joueur
@@ -197,7 +199,6 @@ while !victoire && jeu.nbPiecePlateau > 0 {
     print("Votre adversaire a choisi la piece suivante : ", terminator:"")
     // affichage de la pièce choisie 
     printPiece(p:pieceJoueur)
-    print()
     // affichage du plateau
     printPlateau(jeu:jeu,victoire:victoire)
     print("Choisissez une case où placer votre pièce :")
@@ -207,6 +208,7 @@ while !victoire && jeu.nbPiecePlateau > 0 {
     let y = saisieInt(max:5) // max exclu
     // recuperation de la position choisie par le joueur
     var posJoueur = getPos(x:x, y:y)
+    print("BLOOOOOP")
     jeu.placerPiece(pos:&posJoueur, piece:pieceJoueur)
     victoire = jeu.estGagnant(pos:posJoueur)
 }
