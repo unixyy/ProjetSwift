@@ -92,6 +92,7 @@ struct Jeu : JeuProtocol{
     // placer une piece augmente le nombre de piece sur le plateau de 1
     mutating func placerPiece(pos: inout Position, piece:Piece){
         pos.placerPiece(piece:piece)
+        self.tab[pos.getColonne][pos.getLigne] = pos
         nbPiecePlateau += 1
     }
 
@@ -106,6 +107,9 @@ struct Jeu : JeuProtocol{
         var ItColonne = self.makeItColonne(colonne : pos.getColonne)
         var tabPieces : [Piece] = []
         var cpt : Int = 0
+
+        print(ItColonne)
+        /*
         while let ItColonne = ItColonne.next() {
             tabPieces[cpt] = ItColonne
             cpt += 1
@@ -115,7 +119,7 @@ struct Jeu : JeuProtocol{
                 winner = true
             }
         }
-
+        */
         // On Itère sur les lignes
         var ItLigne = self.makeItLigne(ligne : pos.getLigne)
         tabPieces = []
@@ -454,7 +458,7 @@ struct LigneIterator : IteratorProtocol {
     }
 }
 
-struct ColonneIterator : IteratorProtocol {
+struct ColonneIterator : IteratorProtocol, Sequence{
     private var colonne : [Position] = []
     private var currentPos : Int
 
@@ -473,7 +477,7 @@ struct ColonneIterator : IteratorProtocol {
             }
             else {
                 currentPos += 1
-                return self.next()
+                return nil
             }
         }
         
@@ -509,7 +513,7 @@ struct DiagonaleIterator : IteratorProtocol {
             }
             else {
                 currentPos += 1
-                return self.next()
+                return nil
             }
         }
         

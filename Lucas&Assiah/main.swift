@@ -72,7 +72,7 @@ func choix_piece_reserve(j:inout Jeu, choix:Int) -> Piece {
 }
 
 func choix(j:inout Jeu) -> Piece {
-    affiche_reserve(j:j)
+    //affiche_reserve(j:j)
     // saisie de l'utilisateur
     print("> choisissez la pièce de votre adversaire parmis les pièces disponibles :")
     let choix_joueur = saisieInt(max:j.nbPieceReserve+1) //+1 car le compteur commence à 1 dans affiche_reserve()
@@ -97,7 +97,6 @@ func printPlateau(jeu:Jeu, victoire:Bool) {
         |------|------|------|------|
     */
     var positionIterator = jeu.makeIterator()
-
     print("\n")
     printPattern(start:"   ", pattern:"|--------")
     // print des numeros de colonnes
@@ -118,7 +117,7 @@ func printPlateau(jeu:Jeu, victoire:Bool) {
             let position = positionIterator.next()
             print("| ", terminator:"")
             // s'il y a une piece on print ses caracteristiques
-            if !victoire || position!.estGagnant { // s'il y a victoire, on affiche uniquement les positions gagnantes. 
+            if !victoire /*|| position!.estGagnant*/ { // s'il y a victoire, on affiche uniquement les positions gagnantes. 
                 if let piece = position!.getPiece() {
                     printPiece(p:piece)
                 }
@@ -203,22 +202,21 @@ while !victoire && jeu.nbPiecePlateau < 16 {
     printPlateau(jeu:jeu,victoire:victoire)
     print("Choisissez une case où placer votre pièce :")
     print("Choix de la ligne : ", terminator:"")
-    let x = saisieInt(max:5) // max exclu
-    print("Choix de la colonne : ", terminator:"")
     let y = saisieInt(max:5) // max exclu
+    print("Choix de la colonne : ", terminator:"")
+    let x = saisieInt(max:5) // max exclu
     // recuperation de la position choisie par le joueur
     var posJoueur = getPos(x:x, y:y)
-    print("BLOOOOOP")
+    print("posJoueur =",posJoueur)
     jeu.placerPiece(pos:&posJoueur, piece:pieceJoueur)
-    victoire = jeu.estGagnant(pos:posJoueur)
+    print("posJoueur =",posJoueur)
+    //victoire = jeu.estGagnant(pos:posJoueur)
+
 }
 if victoire {
     print("Joueur \(joueur) A GAGNÉ !")
-    printPlateau(jeu:jeu,victoire:victoire)
-
-}
-else {
+}else {
     print("ÉGALITÉ !")
-    printPlateau(jeu:jeu, victoire:victoire)
 }
+printPlateau(jeu:jeu,victoire:victoire)
 
