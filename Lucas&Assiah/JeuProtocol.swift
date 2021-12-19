@@ -83,7 +83,7 @@ protocol JeuProtocol : Sequence {
     /// pre : piece est dans la reserve
     ///     erreur -> piece pas dans la reserve
     /// post : diminue le nombre de piece de la reserve de 1
-    mutating func choisirPiece(piece : Piece) throws
+    mutating func choisirPiece(piece : Piece)
 
     /// getPosition : Jeu x Int x Int -> Position?
     /// renvoie une position à partir de deux entier x et y. x correspondant à la colonne et y à la ligne
@@ -103,7 +103,7 @@ protocol JeuProtocol : Sequence {
     /// renvoie s'il y a une victoire à partir de la dernière position jouée, mise en paramètre
     /// victoire = au moins 1 caractèristique identique sur 4 pièces alignées sur une même ligne, colonne ou diagonale
     /// post : modifie le paramètre estGagnant des 4 positions gagnantes
-    func estGagnant(pos:Position) -> Bool
+    mutating func estGagnant(pos:Position) -> Bool
 
     // renvoie le nombre de piece sur une ligne
     func nbPieceLigne(ligne: Int) -> Int

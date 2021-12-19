@@ -61,15 +61,11 @@ struct Jeu : JeuProtocol{
     /// pre : piece est dans la reserve
     ///     erreur -> piece pas dans la reserve
     /// post : diminue le nombre de piece de la reserve de 1
-    mutating func choisirPiece(piece : Piece) throws {
-        if !self.reserve.contains(piece) {
-            throw InvalidPieceError.error
-        }else{
+    mutating func choisirPiece(piece : Piece){
             let index = self.reserve.firstIndex(of : piece)!
             reserve.remove(at: index)
             self.nbPieceReserve -= 1
         }
-    }
 
     /// getPosition : Jeu x Int x Int -> Position?
     /// renvoie une position à partir de deux entier x et y. x correspondant à la colonne et y à la ligne
@@ -92,7 +88,7 @@ struct Jeu : JeuProtocol{
     // placer une piece augmente le nombre de piece sur le plateau de 1
     mutating func placerPiece(pos: inout Position, piece:Piece){
         pos.placerPiece(piece:piece)
-        self.tab[pos.getColonne][pos.getLigne] = pos
+        self.tab[pos.getLigne][pos.getColonne] = pos
         nbPiecePlateau += 1
     }
 
@@ -101,66 +97,61 @@ struct Jeu : JeuProtocol{
     /// victoire = au moins 1 caractèristique identique sur 4 pièces alignées sur une même ligne, colonne ou diagonale
     /// post : modifie le paramètre estGagnant des 4 positions gagnantes
     // TODO URGENT
-    func estGagnant(pos:Position) -> Bool {
+    mutating func estGagnant(pos:Position) -> Bool {
         var winner : Bool = false
         // On Itère sur les colonnes
-        var ItColonne = self.makeItColonne(colonne : pos.getColonne)
-        var tabPieces : [Piece] = []
-        var cpt : Int = 0
+        //var ItColonne = self.makeItColonne(colonne : pos.getColonne)
+        //var tabPieces : [Piece] = []
 
-        print(ItColonne)
+        // ON VERIFIE POUR LA COLONNE
+        var tabtemp = Array<Position>(repeating:Position.init(pos:(0,0)),count:4)
+        for i in 0...3{
+            tabtemp[i] = self.tab[i][pos.getColonne]
+        }
+        if tabtemp[0].contenu == nil || tabtemp[1].contenu == nil || tabtemp[2].contenu == nil || tabtemp[3].contenu == nil {
+        }else if compare(p1:tabtemp[0].contenu!,p2:tabtemp[1].contenu!,p3:tabtemp[2].contenu!,p4:tabtemp[3].contenu!){
+            winner = true
+            for i in 0...3{
+                self.tab[i][pos.getColonne].estGagnant = true
+            }
+        }
+
+        // ON VERIFIE POUR LA LIGNE
+        for i in 0...3{
+            tabtemp[i] = self.tab[pos.getLigne][i]
+        }
+        if tabtemp[0].contenu == nil || tabtemp[1].contenu == nil || tabtemp[2].contenu == nil || tabtemp[3].contenu == nil {
+        }else if compare(p1:tabtemp[0].contenu!,p2:tabtemp[1].contenu!,p3:tabtemp[2].contenu!,p4:tabtemp[3].contenu!){
+            winner = true
+            for i in 0...3{
+                self.tab[pos.getLigne][i].estGagnant = true
+            }
+        }
+
+        // ON VERIFIE POUR DIAGONALE DESCENDANTE
+        for i in 0...3{
+            tabtemp[i] = self.tab[i][i]
+        }
+        if tabtemp[0].contenu == nil || tabtemp[1].contenu == nil || tabtemp[2].contenu == nil || tabtemp[3].contenu == nil {
+        }else if compare(p1:tabtemp[0].contenu!,p2:tabtemp[1].contenu!,p3:tabtemp[2].contenu!,p4:tabtemp[3].contenu!){
+            winner = true
+            for i in 0...3{
+                self.tab[i][i].estGagnant = true
+            }
+        }
+
+        // ON VERIFIE POUR DIAGONALE ASCENDANTE
+        for i in 0...3{
+            tabtemp[i] = self.tab[3-i][i]
+        }
+        if tabtemp[0].contenu == nil || tabtemp[1].contenu == nil || tabtemp[2].contenu == nil || tabtemp[3].contenu == nil {
+        }else if compare(p1:tabtemp[0].contenu!,p2:tabtemp[1].contenu!,p3:tabtemp[2].contenu!,p4:tabtemp[3].contenu!){
+            winner = true
+            for i in 0...3{
+                self.tab[3-i][i].estGagnant = true
+            }
+        }
         /*
-        while let ItColonne = ItColonne.next() {
-            tabPieces[cpt] = ItColonne
-            cpt += 1
-        }
-        if cpt == 3 {
-            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
-                winner = true
-            }
-        }
-        */
-        // On Itère sur les lignes
-        var ItLigne = self.makeItLigne(ligne : pos.getLigne)
-        tabPieces = []
-        cpt = 0
-        while let ItLigne = ItLigne.next() {
-            tabPieces[cpt] = ItLigne
-            cpt += 1
-        }
-        if cpt == 3 {
-            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
-                winner = true
-            }
-        }
-
-        // On Itère sur la diagonale descendante
-        var ItDiagoDesc = self.makeItDiagonale(decroissante : true)
-        tabPieces = []
-        cpt = 0
-        while let ItDiagoDesc = ItDiagoDesc.next() {
-            tabPieces[cpt] = ItDiagoDesc
-            cpt += 1
-        }
-        if cpt == 3 {
-            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
-                winner = true
-            }
-        }
-
-        // On Itère sur la diagonale ascendante
-        var ItDiagoAsc = self.makeItDiagonale(decroissante : false)
-        tabPieces = []
-        cpt = 0
-        while let ItDiagoAsc = ItDiagoAsc.next() {
-            tabPieces[cpt] = ItDiagoAsc
-            cpt += 1
-        }
-        if cpt == 3 {
-            if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
-                winner = true
-            }
-        }
 
         if self.modeDifficile {
             // On Itère sur les carrés
@@ -229,6 +220,8 @@ struct Jeu : JeuProtocol{
                 }
             }
         }
+        */
+
         return winner
 
     }

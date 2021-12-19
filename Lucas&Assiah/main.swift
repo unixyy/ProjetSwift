@@ -56,23 +56,20 @@ func affiche_reserve(j:Jeu) {
 
 func choix_piece_reserve(j:inout Jeu, choix:Int) -> Piece {
     var reserveIterator = j.makeItReserve()
+    var res : Piece = Piece.init(estBlanche:false, estRonde:false, estRemplie:false, estGrande:false)
     var k = 0
     while k != choix {
         k += 1
-        do {
-            if let piece_joueur = reserveIterator.next(){
-            try j.choisirPiece(piece:piece_joueur)
-            return piece_joueur
-            }
-        } catch {
-            fatalError("erreur")
+        if let piece_joueur = reserveIterator.next(){
+            res = piece_joueur
         }
     }
-    return reserveIterator.next()!
+    j.choisirPiece(piece:res)
+    return res
 }
 
 func choix(j:inout Jeu) -> Piece {
-    //affiche_reserve(j:j)
+    affiche_reserve(j:j)
     // saisie de l'utilisateur
     print("> choisissez la pièce de votre adversaire parmis les pièces disponibles :")
     let choix_joueur = saisieInt(max:j.nbPieceReserve+1) //+1 car le compteur commence à 1 dans affiche_reserve()
@@ -117,7 +114,7 @@ func printPlateau(jeu:Jeu, victoire:Bool) {
             let position = positionIterator.next()
             print("| ", terminator:"")
             // s'il y a une piece on print ses caracteristiques
-            if !victoire /*|| position!.estGagnant*/ { // s'il y a victoire, on affiche uniquement les positions gagnantes. 
+            if !victoire || position!.estGagnant { // s'il y a victoire, on affiche uniquement les positions gagnantes. 
                 if let piece = position!.getPiece() {
                     printPiece(p:piece)
                 }
@@ -152,13 +149,17 @@ func getPos(x:Int, y:Int) -> Position {
             // pos est assurée d'être de type Position et la position n'est pas occupée
             return pos
         }
+        else {
+            let x1 = saisieInt(max:5) // max exclu
+            let y1 = saisieInt(max:5) // max exclu
+            return getPos(x:x1, y:y1)
+        }
     }
     else{
         let x1 = saisieInt(max:5) // max exclu
         let y1 = saisieInt(max:5) // max exclu
         return getPos(x:x1, y:y1) // getPos est forcement du type Position donc on s'assure de retourner le bon type
     }
-    return jeu.getPosition(x:0,y:0)!
 }
 
 func choixDifficulte() -> Bool {
@@ -190,6 +191,7 @@ print("Joueur \(joueur) c'est à vous de jouer : ")
 
 while !victoire && jeu.nbPiecePlateau < 16 {
     // choix de la pièce pour l'autre joueur
+    printPlateau(jeu:jeu,victoire:victoire)
     let pieceJoueur = choix(j:&jeu)
     // changement de joueur
     if joueur == 1 { joueur = 2}
@@ -202,15 +204,21 @@ while !victoire && jeu.nbPiecePlateau < 16 {
     printPlateau(jeu:jeu,victoire:victoire)
     print("Choisissez une case où placer votre pièce :")
     print("Choix de la ligne : ", terminator:"")
-    let y = saisieInt(max:5) // max exclu
+    var x = saisieInt(max:5) // max exclu
     print("Choix de la colonne : ", terminator:"")
-    let x = saisieInt(max:5) // max exclu
+    var y = saisieInt(max:5) // max exclu
     // recuperation de la position choisie par le joueur
     var posJoueur = getPos(x:x, y:y)
-    print("posJoueur =",posJoueur)
+    while posJoueur.getPiece() != nil{
+        print("la position est déjà utilisée")
+        print("Choix de la ligne : ", terminator:"")
+        x = saisieInt(max:5)
+        print("Choix de la colonne : ", terminator:"")
+        y = saisieInt(max:5)
+        posJoueur = getPos(x:x,y:y)
+    }
     jeu.placerPiece(pos:&posJoueur, piece:pieceJoueur)
-    print("posJoueur =",posJoueur)
-    //victoire = jeu.estGagnant(pos:posJoueur)
+    victoire = jeu.estGagnant(pos:posJoueur)
 
 }
 if victoire {
