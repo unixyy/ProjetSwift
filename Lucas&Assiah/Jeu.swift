@@ -96,7 +96,6 @@ struct Jeu : JeuProtocol{
     /// renvoie s'il y a une victoire à partir de la dernière position jouée, mise en paramètre
     /// victoire = au moins 1 caractèristique identique sur 4 pièces alignées sur une même ligne, colonne ou diagonale
     /// post : modifie le paramètre estGagnant des 4 positions gagnantes
-    // TODO URGENT
     mutating func estGagnant(pos:Position) -> Bool {
         var winner : Bool = false
         // On Itère sur les colonnes
@@ -151,79 +150,87 @@ struct Jeu : JeuProtocol{
                 self.tab[3-i][i].estGagnant = true
             }
         }
-        /*
 
+		// on verifie si on ets dans le mode difficile ou pas
         if self.modeDifficile {
-            // On Itère sur les carrés
-            // Carre Haut Gauche
-            // Si on est capable de créer un itérateur carré sur la case (x-1,y-1) 
-            if (pos.getColonne != 1 && pos.getLigne != 1) {
-                var ItCarreHG = self.makeItCarre(posCarre : (pos.getColonne-1,pos.getLigne-1))
-                tabPieces = []
-                cpt = 0
-                while let ItCarreHG = ItCarreHG.next() {
-                    tabPieces[cpt] = ItCarreHG
-                    cpt += 1
-                }
-                if cpt == 3 {
-                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
-                        winner = true
-                    }
-                }
-            }
-            // Carre Haut Droit 
-            // Si on est capable de créer un itérateur carré sur la case (x-1,y)
-            if (pos.getColonne != 1 && pos.getLigne != 4) {
-                var ItCarreHD = self.makeItCarre(posCarre : (pos.getColonne-1,pos.getLigne))
-                tabPieces = []
-                cpt = 0
-                while let ItCarreHD = ItCarreHD.next() {
-                    tabPieces[cpt] = ItCarreHD
-                    cpt += 1
-                }
-                if cpt == 3 {
-                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
-                        winner = true
-                    }
-                }
-            }
-            // Carre Bas Gauche
-            // Si on est capable de créer un itérateur carré sur la case (x,y-1)
-            if (pos.getColonne != 4 && pos.getLigne != 1) {
-                var ItCarreBG = self.makeItCarre(posCarre : (pos.getColonne,pos.getLigne-1))
-                tabPieces = []
-                cpt = 0
-                while let ItCarreBG = ItCarreBG.next() {
-                    tabPieces[cpt] = ItCarreBG
-                    cpt += 1
-                }
-                if cpt == 3 {
-                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
-                        winner = true
-                    }
-                }
-            }
-            // Carre Bas Droit 
-            // Si on est capable de créer un itérateur carré sur la case (x,y)
-            if (pos.getColonne != 4 && pos.getLigne != 4) {
-                var ItCarreBD = self.makeItCarre(posCarre : (pos.getColonne,pos.getLigne))
-                tabPieces = []
-                cpt = 0
-                while let ItCarreBD = ItCarreBD.next() {
-                    tabPieces[cpt] = ItCarreBD
-                    cpt += 1
-                }
-                if cpt == 3 {
-                    if (compare(p1 : tabPieces[0], p2 : tabPieces[1], p3 : tabPieces[2], p4 : tabPieces[3])) {
-                        winner = true
-                    }
-                }
-            }
-        }
-        */
+            var hd : Bool = true
+            var bd : Bool = true
+            var hg : Bool = true
+            var bg : Bool = true
 
+            switch pos.getLigne {
+                case 0:
+                    hg = false
+                    hd = false
+                case 3:
+                    bd = false
+                    bg = false
+				default: break
+            }
+
+            switch pos.getColonne {
+                case 0:
+                    hg = false
+                    bg = false
+                case 3:
+					hd = false
+					bd = false
+				default: break
+            }
+
+			if hg {
+				tabtemp = [self.tab[pos.getLigne-1][pos.getColonne-1],self.tab[pos.getLigne-1][pos.getColonne],self.tab[pos.getLigne][pos.getColonne-1],self.tab[pos.getLigne][pos.getColonne]]
+				
+				if tabtemp[0].contenu == nil || tabtemp[1].contenu == nil || tabtemp[2].contenu == nil || tabtemp[3].contenu == nil {
+				}else if compare(p1:tabtemp[0].contenu!,p2:tabtemp[1].contenu!,p3:tabtemp[2].contenu!,p4:tabtemp[3].contenu!){
+					winner = true
+					self.tab[pos.getLigne-1][pos.getColonne-1].estGagnant = true
+					self.tab[pos.getLigne-1][pos.getColonne].estGagnant = true
+					self.tab[pos.getLigne][pos.getColonne-1].estGagnant = true
+					self.tab[pos.getLigne][pos.getColonne].estGagnant = true
+				}
+			}
+
+			if hd {
+				tabtemp = [self.tab[pos.getLigne-1][pos.getColonne],self.tab[pos.getLigne-1][pos.getColonne+1],self.tab[pos.getLigne][pos.getColonne],self.tab[pos.getLigne][pos.getColonne+1]]
+				
+				if tabtemp[0].contenu == nil || tabtemp[1].contenu == nil || tabtemp[2].contenu == nil || tabtemp[3].contenu == nil {
+				}else if compare(p1:tabtemp[0].contenu!,p2:tabtemp[1].contenu!,p3:tabtemp[2].contenu!,p4:tabtemp[3].contenu!){
+					winner = true
+					self.tab[pos.getLigne-1][pos.getColonne].estGagnant = true
+					self.tab[pos.getLigne-1][pos.getColonne+1].estGagnant = true
+					self.tab[pos.getLigne][pos.getColonne].estGagnant = true
+					self.tab[pos.getLigne][pos.getColonne+1].estGagnant = true
+				}
+			}
+
+			if bg {
+				tabtemp = [self.tab[pos.getLigne][pos.getColonne-1],self.tab[pos.getLigne][pos.getColonne],self.tab[pos.getLigne+1][pos.getColonne-1],self.tab[pos.getLigne+1][pos.getColonne]]
+				
+				if tabtemp[0].contenu == nil || tabtemp[1].contenu == nil || tabtemp[2].contenu == nil || tabtemp[3].contenu == nil {
+				}else if compare(p1:tabtemp[0].contenu!,p2:tabtemp[1].contenu!,p3:tabtemp[2].contenu!,p4:tabtemp[3].contenu!){
+					winner = true
+					self.tab[pos.getLigne][pos.getColonne-1].estGagnant = true
+					self.tab[pos.getLigne][pos.getColonne].estGagnant = true
+					self.tab[pos.getLigne+1][pos.getColonne-1].estGagnant = true
+					self.tab[pos.getLigne+1][pos.getColonne].estGagnant = true
+				}
+			}
+
+			if bd {
+				tabtemp = [self.tab[pos.getLigne][pos.getColonne],self.tab[pos.getLigne][pos.getColonne+1],self.tab[pos.getLigne+1][pos.getColonne],self.tab[pos.getLigne+1][pos.getColonne+1]]
+				
+				if tabtemp[0].contenu == nil || tabtemp[1].contenu == nil || tabtemp[2].contenu == nil || tabtemp[3].contenu == nil {
+				}else if compare(p1:tabtemp[0].contenu!,p2:tabtemp[1].contenu!,p3:tabtemp[2].contenu!,p4:tabtemp[3].contenu!){
+					winner = true
+					self.tab[pos.getLigne][pos.getColonne].estGagnant = true
+					self.tab[pos.getLigne][pos.getColonne+1].estGagnant = true
+					self.tab[pos.getLigne+1][pos.getColonne].estGagnant = true
+					self.tab[pos.getLigne+1][pos.getColonne+1].estGagnant = true
+				}
+			}
+		}
         return winner
-
     }
 
     // renvoie le nombre de piece sur une ligne
